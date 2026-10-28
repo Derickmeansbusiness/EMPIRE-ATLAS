@@ -141,7 +141,7 @@ export default async function CommandCenterPage({ searchParams }: { searchParams
         <Card>
           <Eyebrow className="mb-2">Financial modelling &amp; simulations</Eyebrow>
           <p className="text-sm text-platinum/80">Saved models: <span className="numeric text-ivory">{summary.models}</span>. Principles: <span className="numeric text-ivory">{summary.principles}</span>.</p>
-          <p className="mt-2 text-xs text-slate-mist">The Acquisition Underwriter and Debt Schedule are live now. Saving models, simulations and the doctrine workspace are scheduled for later phases.</p>
+          <p className="mt-2 text-xs text-slate-mist">All seven lab tools are live with saved, versioned models. Simulations and the doctrine workspace are scheduled for later phases.</p>
           <LinkButton href="/lab" variant="secondary" className="mt-3 text-xs">Open the lab</LinkButton>
         </Card>
         <Card>

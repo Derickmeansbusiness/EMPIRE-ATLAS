@@ -7,7 +7,7 @@ async function main() {
   const database = await createDatabase();
   await runMigrations(database);
   const research = await seedResearch(database.db);
-  console.log(`[atlas] research seeded: ${research.investors} investors (1 published, ${research.investors - 1} queued), ${research.claims} claims, ${research.sources} sources, ${research.transactions} transactions`);
+  console.log(`[atlas] research seeded: ${research.investors} investors (1 published, ${research.investors - 1} queued), ${research.claims} claims, ${research.sources} sources, ${research.transactions} transactions, ${research.cases} modern cases`);
   const founder = await seedFounder(database.db);
   if (founder === "skipped") {
     console.log("[atlas] founder account skipped: set ATLAS_FOUNDER_EMAIL and ATLAS_FOUNDER_PASSWORD (or run `pnpm atlas:create-user`) to create Researcher 001.");

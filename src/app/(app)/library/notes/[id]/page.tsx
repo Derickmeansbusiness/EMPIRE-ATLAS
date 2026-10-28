@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import { requireUser } from "@/lib/auth/current-user";
 import { getNote } from "@/lib/data/workspace";
-import { claims, investors, transactions } from "@/db/schema";
+import { caseStudies, claims, investors, transactions } from "@/db/schema";
 import { Button, Card, Eyebrow, PageHeader } from "@/components/ui/primitives";
 import { EditNoteForm } from "@/components/workspace/note-form";
 import { deleteNoteAction } from "@/app/actions/workspace";
@@ -22,6 +22,7 @@ export default async function NotePage({ params }: { params: Promise<{ id: strin
   let linkHref: string | null = null; let linkLabel: string | null = null;
   if (note.linkedKind === "claim" && note.linkedId) { const c = await db.query.claims.findFirst({ where: eq(claims.id, note.linkedId) }); if (c) { linkHref = `/evidence/claims/${c.slug}`; linkLabel = c.claimText; } }
   if (note.linkedKind === "investor" && note.linkedId) { const i = await db.query.investors.findFirst({ where: eq(investors.id, note.linkedId) }); if (i) { linkHref = `/dossiers/${i.slug}`; linkLabel = i.fullName; } }
+  if (note.linkedKind === "case_study" && note.linkedId) { const c = await db.query.caseStudies.findFirst({ where: eq(caseStudies.id, note.linkedId) }); if (c) { linkHref = `/lab/cases/${c.slug}`; linkLabel = c.title; } }
   if (note.linkedKind === "transaction" && note.linkedId) { const t = await db.query.transactions.findFirst({ where: eq(transactions.id, note.linkedId) }); if (t) { linkHref = `/deals/${t.slug}`; linkLabel = t.name; } }
   return (
     <>

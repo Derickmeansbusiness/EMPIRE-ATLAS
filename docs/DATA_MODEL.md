@@ -37,9 +37,16 @@ Typed mirror: `src/db/schema.ts`. Diagram below is logical; all primary keys are
 - **investment_principles** (title, statement, source_investor_id, supporting_transaction_id, supporting_claim_id, relevant_risk, modern_application, personal_notes)
 - **investment_doctrines** (user_id PK; eight doctrine fields)
 
+## Models & cases (migration 0003)
+- **model_versions** (model_id, version unique per model, assumptions jsonb, outputs jsonb, note) — every save of a
+  financial model appends a version; RLS through the parent model's owner.
+- **case_studies** (slug, title, kind historical|fictional, investor_id, transaction_id, subtitle, summary,
+  body_markdown, disclaimer, model_presets jsonb, publish_status). Fictional cases carry a mandatory disclaimer.
+- `linked_object_kind` gained `case_study` so notes and bookmarks can attach to a case.
+
 ## Planned tables (Phase 4–5; not yet migrated)
-case_studies, model_assumptions, model_versions, simulations, simulation_scenarios, simulation_attempts,
-investment_committee_submissions, quizzes, quiz_results, market_data_series (with source + as_of).
+simulations, simulation_scenarios, simulation_attempts, investment_committee_submissions, quizzes, quiz_results,
+market_data_series (with source + as_of).
 
 ## Enumerations
 user_role, user_status, publish_status, verification_status (verified_primary | supported_secondary | contested |

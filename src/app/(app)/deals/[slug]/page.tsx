@@ -5,6 +5,7 @@ import { getDb } from "@/db/client";
 import { requireUser } from "@/lib/auth/current-user";
 import { getTransaction } from "@/lib/data/research";
 import { bookmarkedIds, listNotes, recordProgress } from "@/lib/data/workspace";
+import { listModelsForTransaction, MODEL_KIND_LABEL, MODEL_KIND_PATH, type ModelKind } from "@/lib/data/models";
 import { can } from "@/lib/auth/roles";
 import { Alert, Card, Eyebrow, PageHeader } from "@/components/ui/primitives";
 import { DataStatusBadge } from "@/components/research/status";
@@ -26,7 +27,7 @@ export default async function DealPage({ params, searchParams }: { params: Promi
   const t = await getTransaction(db, slug, can(user.role, "research:read_drafts"));
   if (!t) notFound();
   await recordProgress(db, user.id, "transaction.opened", "transaction", t.tx.id);
-  const [claimBookmarks, notes] = await Promise.all([bookmarkedIds(db, user.id, "claim"), listNotes(db, user.id, { linkedKind: "transaction", linkedId: t.tx.id })]);
+  const [claimBookmarks, notes, attachedModels] = await Promise.all([bookmarkedIds(db, user.id, "claim"), listNotes(db, user.id, { linkedKind: "transaction", linkedId: t.tx.id }), listModelsForTransaction(db, user.id, t.tx.id)]);
   const claimById = new Map(t.claims.map((c) => [c.id, c] as const));
   const returnTo = `/deals/${t.tx.slug}`;
   const fields: Array<[string, string | null]> = [
@@ -48,7 +49,12 @@ export default async function DealPage({ params, searchParams }: { params: Promi
         <Eyebrow className="mb-1">Sources &amp; uses</Eyebrow>
         <h2 className="editorial-h2 mb-4 text-2xl">Capital stack as documented</h2>
         <SourcesAndUses rows={t.stack} />
-        <p className="mt-3 text-xs text-slate-mist">Want to model this with your own assumptions? The Phase 2 Capital Stack Builder will let you attach an explicitly hypothetical model to this record. Until then, the <Link href="/lab/underwriter" className="text-gold underline">Acquisition Underwriter</Link> accepts any inputs you label yourself.</p>
+        <div className="mt-4 card p-4">
+          <div className="flex flex-wrap items-center justify-between gap-2"><Eyebrow>My hypothetical models attached to this record</Eyebrow><Link href={`/lab/capital-stack?totalUses=39000000000&value=39000000000`} className="text-xs text-gold hover:underline">Model it in the Capital Stack Builder →</Link></div>
+          {attachedModels.length === 0 ? <p className="mt-2 text-xs text-slate-mist">None yet. Models you save from any lab tool can be attached here. They are stored separately from the historical record and always labelled hypothetical.</p> : (
+            <ul className="mt-2 space-y-1.5 text-sm">{attachedModels.map((m) => <li key={m.id} className="flex flex-wrap items-center gap-2"><span className="rounded-full border border-sky-400/50 px-2 py-0.5 text-[0.6rem] uppercase tracking-[0.14em] text-sky-200">Hypothetical</span><Link href={`${MODEL_KIND_PATH[m.modelKind as ModelKind]}?model=${m.id}`} className="text-ivory hover:text-gold">{m.name}</Link><span className="text-xs text-slate-mist">{MODEL_KIND_LABEL[m.modelKind as ModelKind]} · v{m.version}</span></li>)}</ul>
+          )}
+        </div>
       </section>
 
       <div className="mt-8 grid gap-5 lg:grid-cols-[2fr_1fr]">

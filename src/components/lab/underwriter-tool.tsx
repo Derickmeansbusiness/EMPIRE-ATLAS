@@ -1,7 +1,8 @@
 import { underwriteAcquisition, type UnderwritingAssumptions } from "@/finance/underwriting";
-import { Alert, Button, Card, Eyebrow, Field, Input, Stat } from "@/components/ui/primitives";
+import { Alert, Card, Eyebrow, Stat } from "@/components/ui/primitives";
 import { formatMultiple, formatPct, formatUsd } from "@/lib/format";
 import { FinanceInputError } from "@/finance/core";
+import { ParamForm, type FieldSpec } from "./param-form";
 
 const DEFAULTS: UnderwritingAssumptions = {
   purchasePrice: 12_500_000, closingCostRate: 0.02, initialCapex: 750_000, units: 96, monthlyRentPerUnit: 1_250, otherIncomeAnnual: 40_000,
@@ -9,7 +10,7 @@ const DEFAULTS: UnderwritingAssumptions = {
   amortizationYears: 30, interestOnlyYears: 1, holdingPeriodYears: 5, exitCapRate: 0.065, saleCostRate: 0.02,
 };
 
-const FIELDS: Array<[keyof UnderwritingAssumptions, string, "usd" | "pct" | "int" | "num"]> = [
+export const FIELDS: Array<[keyof UnderwritingAssumptions, string, "usd" | "pct" | "int" | "num"]> = [
   ["purchasePrice", "Purchase price ($)", "usd"], ["closingCostRate", "Closing costs (% of price)", "pct"], ["initialCapex", "Initial capital expenditure ($)", "usd"],
   ["units", "Units", "int"], ["monthlyRentPerUnit", "Monthly rent per unit ($)", "usd"], ["otherIncomeAnnual", "Other income, annual ($)", "usd"],
   ["vacancyRate", "Vacancy & credit loss (%)", "pct"], ["operatingExpensesAnnual", "Operating expenses, year 1 ($)", "usd"],
@@ -17,6 +18,15 @@ const FIELDS: Array<[keyof UnderwritingAssumptions, string, "usd" | "pct" | "int
   ["loanToValue", "Loan-to-value (%)", "pct"], ["annualRate", "Interest rate (%)", "pct"], ["amortizationYears", "Amortisation (years)", "int"], ["interestOnlyYears", "Interest-only (years)", "int"],
   ["holdingPeriodYears", "Holding period (years)", "int"], ["exitCapRate", "Exit cap rate (%)", "pct"], ["saleCostRate", "Sale costs (% of price)", "pct"],
 ];
+
+export const UNDERWRITER_FIELDS: FieldSpec[] = FIELDS.map(([key, label, kind]) => ({ key, label, kind }));
+
+/** UI-unit values (percent as percent) for forms and saved models. */
+export function toUiValues(a: UnderwritingAssumptions): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const [key, , kind] of FIELDS) out[key] = kind === "pct" ? Number((a[key] * 100).toFixed(6)) : a[key];
+  return out;
+}
 
 export function parseAssumptions(sp: Record<string, string | string[] | undefined>): { assumptions: UnderwritingAssumptions; touched: boolean } {
   const out: Record<string, number> = { ...DEFAULTS };
@@ -32,7 +42,7 @@ export function parseAssumptions(sp: Record<string, string | string[] | undefine
   return { assumptions: out as unknown as UnderwritingAssumptions, touched };
 }
 
-export function UnderwriterTool({ sp }: { sp: Record<string, string | string[] | undefined> }) {
+export function UnderwriterTool({ sp, modelId, savePanel }: { sp: Record<string, string | string[] | undefined>; modelId?: string | null; savePanel?: React.ReactNode }) {
   const { assumptions, touched } = parseAssumptions(sp);
   let result: ReturnType<typeof underwriteAcquisition> | null = null; let error: string | null = null;
   try { result = underwriteAcquisition(assumptions); } catch (e) { error = e instanceof FinanceInputError ? e.message : "Could not compute with these inputs."; }
@@ -40,15 +50,9 @@ export function UnderwriterTool({ sp }: { sp: Record<string, string | string[] |
     <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
       <Card>
         <Eyebrow className="mb-3">Assumptions (hypothetical)</Eyebrow>
-        <form method="get" className="grid grid-cols-2 gap-3">
-          {FIELDS.map(([key, label, kind]) => {
-            const v = assumptions[key];
-            const display = kind === "pct" ? Number((v * 100).toFixed(4)) : v;
-            return <Field key={key} label={label} htmlFor={`uw-${key}`}><Input id={`uw-${key}`} name={key} type="number" inputMode="decimal" step={kind === "int" ? 1 : kind === "pct" ? 0.05 : 1} defaultValue={display} /></Field>;
-          })}
-          <div className="col-span-2 mt-2 flex gap-2"><Button type="submit">Run underwriting</Button><a href="/lab/underwriter" className="inline-flex items-center rounded-md border border-platinum/25 px-4 py-2.5 text-sm text-platinum hover:border-gold hover:text-gold">Reset</a></div>
-        </form>
+        <ParamForm action="/lab/underwriter" fields={UNDERWRITER_FIELDS} values={toUiValues(assumptions)} submitLabel="Run underwriting" hidden={modelId ? { model: modelId } : {}} />
         {!touched && <p className="mt-3 text-xs text-slate-mist">Defaults describe a fictional 96-unit garden apartment deal. They are illustrative, not a market quote.</p>}
+        {savePanel && <div className="mt-6 border-t hairline pt-5"><Eyebrow className="mb-3">Save</Eyebrow>{savePanel}</div>}
       </Card>
       <div className="space-y-5">
         {error && <Alert tone="error">{error}</Alert>}

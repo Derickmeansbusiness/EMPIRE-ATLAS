@@ -31,7 +31,7 @@ export const relationshipKindEnum = pgEnum("relationship_kind", [
   "partnered_with", "developed", "managed", "leased", "guaranteed", "advised",
 ]);
 export const linkedObjectKindEnum = pgEnum("linked_object_kind", [
-  "investor", "institution", "transaction", "claim", "source", "financial_model", "historical_event",
+  "investor", "institution", "transaction", "claim", "source", "financial_model", "historical_event", "case_study",
 ]);
 export const datePrecisionEnum = pgEnum("date_precision", ["day", "month", "year", "circa", "decade"]);
 
@@ -400,6 +400,35 @@ export const investmentDoctrines = pgTable("investment_doctrines", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().default(now()),
 });
 
+export const modelVersions = pgTable("model_versions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  modelId: uuid("model_id").notNull().references(() => financialModels.id, { onDelete: "cascade" }),
+  version: integer("version").notNull(),
+  assumptions: jsonb("assumptions").notNull(),
+  outputs: jsonb("outputs").notNull().default(sql`'{}'::jsonb`),
+  note: text("note"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+}, (t) => [unique().on(t.modelId, t.version)]);
+
+export const caseKindEnum = pgEnum("case_kind", ["historical", "fictional"]);
+
+export const caseStudies = pgTable("case_studies", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  kind: caseKindEnum("kind").notNull(),
+  investorId: uuid("investor_id").references(() => investors.id, { onDelete: "set null" }),
+  transactionId: uuid("transaction_id").references(() => transactions.id, { onDelete: "set null" }),
+  subtitle: text("subtitle"),
+  summary: text("summary").notNull(),
+  bodyMarkdown: text("body_markdown").notNull(),
+  disclaimer: text("disclaimer"),
+  modelPresets: jsonb("model_presets").notNull().default(sql`'{}'::jsonb`),
+  publishStatus: publishStatusEnum("publish_status").notNull().default("draft"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().default(now()),
+});
+
 export type User = typeof users.$inferSelect;
 export type Investor = typeof investors.$inferSelect;
 export type Institution = typeof institutions.$inferSelect;
@@ -411,3 +440,5 @@ export type Bookmark = typeof bookmarks.$inferSelect;
 export type HistoricalEvent = typeof historicalEvents.$inferSelect;
 export type CapitalStackItem = typeof capitalStackItems.$inferSelect;
 export type DossierSection = typeof dossierSections.$inferSelect;
+export type FinancialModel = typeof financialModels.$inferSelect;
+export type CaseStudy = typeof caseStudies.$inferSelect;

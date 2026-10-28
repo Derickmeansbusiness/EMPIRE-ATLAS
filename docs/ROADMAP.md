@@ -12,16 +12,19 @@ dashboard; dossier explorer; Sam Zell dossier (12 divisions, 32 claims, 29 sourc
 basic administration (users, claims review, content status, audit). Bonus from Phase 2 scope: Acquisition
 Underwriter and Debt Schedule on the tested finance library; Equity Office transaction record with sources & uses.
 
-## Phase 2 — Deal Archaeology & Capital Lab — Next
-- Capital Stack Builder UI on `summarizeCapitalStack` (library done).
-- Save / reload / version financial models (`financial_models` table exists).
-- Attach hypothetical models to a transaction with explicit labelling.
-- Debt Lab: floating-rate, bridge, seller financing comparisons.
-- Private Credit Underwriting, Distressed Acquisition Simulator, Equity Waterfall Studio, Portfolio Stress Test.
-- The Zell-inspired fictional distressed multifamily case (separate entities and labels).
-- More finance unit tests (waterfalls, stress scenarios).
+## Phase 2 — Deal Archaeology & Capital Lab — Live
+All seven lab tools (Capital Stack Builder, Acquisition Underwriter, Debt Structuring Lab with fixed / IO / balloon /
+floating / bridge / seller comparison, Private Credit Underwriting with a defined default scenario, Distressed
+Acquisition Simulator with DPO / restructure / foreclosure paths, Equity Waterfall Studio with pref, catch-up and
+IRR-hurdle tiers, Portfolio Stress Test). Saved, versioned, private models (`financial_models` + `model_versions`),
+loadable by URL and attachable to a historical transaction with a permanent "hypothetical" label. The fictional
+Meridian Court distressed multifamily case (`case_studies`) with lab presets. 17 new finance unit tests with
+Python-verified expectations.
 
-## Phase 3 — Network intelligence
+Deferred from Phase 2: a hypothetical capital-stack overlay rendered inside the historical sources-and-uses table
+(today models are listed beside the record and opened in the lab).
+
+## Phase 3 — Network intelligence — Next
 React Flow graph on `relationships`; filters by investor, year, geography, asset class, relationship type,
 institution, transaction, evidence confidence; node detail panels with linked evidence; geographic asset view.
 
@@ -44,5 +47,5 @@ a subject is published only when its twelve divisions are sourced.
 ## Known limitations (Phase 1)
 - Sources were located via web search; several originals (sec.gov, news sites) could not be fetched from the
   build environment, so excerpts come from search summaries and are flagged for editor re-verification.
-- Dossier prose is edited in seed files, not in the browser.
+- Dossier prose and case studies are edited in seed files, not in the browser.
 - No payments, no AI integration, no external market data, no production deployment configured.

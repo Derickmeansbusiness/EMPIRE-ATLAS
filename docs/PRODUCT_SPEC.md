@@ -45,21 +45,24 @@ timeline; asset-class exposure; transactions; documented institutions and relati
 and status; evidence confidence counts; a note on wealth-figure definitions; research and reading modes; private
 notes attached to the dossier; dossier bookmark.
 
-### C. Deal Archaeology (live for records and sources & uses)
+### C. Deal Archaeology (live)
 Transaction name, lead investor and counterparties, dates with precision, asset, market, headline value with data
 status, summary, rights acquired, operating strategy, subsequent events, exit/status, verified outcome, open
 questions, sources & uses with documented / estimate / unknown / hypothetical lines, transaction timeline, evidence
-list, notes. Hypothetical modelling against a deal is Phase 2.
+list, notes, and the user's attached hypothetical models (stored apart from the record).
 
 ### D. Capital Network Explorer (partial)
 Relationships table with evidence badges and relationship-type filter; interactive graph (React Flow) and
 geography/year/asset-class filters are Phase 3.
 
-### E. Capital Architecture Lab (partial)
-Live: Acquisition Underwriter (NOI, cap rate, debt yield, DSCR, cash-on-cash, levered IRR, equity multiple,
-annual table, warnings, formulas) and Debt Structuring Lab (amortising / IO / balloon schedules). Phase 2: Capital
-Stack Builder, Private Credit Underwriting, Distressed Acquisition Simulator, Equity Waterfall Studio, Portfolio
-Stress Test, saved and versioned models.
+### E. Capital Architecture Lab (live)
+Seven tools: Capital Stack Builder, Acquisition Underwriter, Debt Structuring Lab (fixed, IO, balloon, floating,
+bridge, seller with side-by-side comparison), Private Credit Underwriting (performing economics plus a defined
+default scenario), Distressed Acquisition Simulator (DPO, restructure, foreclosure-to-REO paths), Equity Waterfall
+Studio (ROC, compounding pref, catch-up, IRR-hurdle tiers), Portfolio Stress Test (eight scenarios, each a full
+re-underwriting with a refinancing-gap check). Inputs live in the URL; models are saved, versioned and private;
+a model can be attached to a historical transaction and is always labelled hypothetical. The fictional Meridian
+Court case links the Zell principles to lab presets.
 
 ### F. Empire Strategy Simulator (planned, Phase 4)
 ### G. Strategy Synthesis Engine & Doctrine (planned, Phase 5; tables exist)

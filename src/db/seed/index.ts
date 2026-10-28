@@ -4,17 +4,18 @@
 import { and, eq } from "drizzle-orm";
 import type { AtlasDb } from "@/db/client";
 import {
-  capitalStackItems, claimSources, claims, dossierSections, historicalEvents, institutions, investors,
+  capitalStackItems, caseStudies, claimSources, claims, dossierSections, historicalEvents, institutions, investors,
   quotations, relationships, sources, transactionParticipants, transactions, users,
 } from "@/db/schema";
 import { zellDossier } from "./zell";
 import { roadmapInstitutions, roadmapInvestors } from "./roadmap";
+import { seedCases } from "./cases";
 import type { SeedInvestorDossier } from "./types";
 import { createUser, setUserRole } from "@/lib/auth/service";
 
 export const dossiers: SeedInvestorDossier[] = [zellDossier];
 
-export async function seedResearch(db: AtlasDb): Promise<{ investors: number; claims: number; sources: number; transactions: number }> {
+export async function seedResearch(db: AtlasDb): Promise<{ investors: number; claims: number; sources: number; transactions: number; cases: number }> {
   let claimCount = 0; let sourceCount = 0; let txCount = 0;
 
   for (const d of dossiers) {
@@ -186,7 +187,14 @@ export async function seedResearch(db: AtlasDb): Promise<{ investors: number; cl
       .onConflictDoNothing({ target: institutions.slug });
   }
 
-  return { investors: dossiers.length + roadmapInvestors.length, claims: claimCount, sources: sourceCount, transactions: txCount };
+  for (const c of seedCases) {
+    const inv = c.investorSlug ? await db.query.investors.findFirst({ where: eq(investors.slug, c.investorSlug) }) : null;
+    const tx = c.transactionSlug ? await db.query.transactions.findFirst({ where: eq(transactions.slug, c.transactionSlug) }) : null;
+    const values = { slug: c.slug, title: c.title, subtitle: c.subtitle, kind: c.kind, investorId: inv?.id ?? null, transactionId: tx?.id ?? null, summary: c.summary, disclaimer: c.disclaimer, bodyMarkdown: c.body, modelPresets: c.modelPresets, publishStatus: "published" as const };
+    await db.insert(caseStudies).values(values).onConflictDoUpdate({ target: caseStudies.slug, set: { ...values, updatedAt: new Date() } });
+  }
+
+  return { investors: dossiers.length + roadmapInvestors.length, claims: claimCount, sources: sourceCount, transactions: txCount, cases: seedCases.length };
 }
 
 /**

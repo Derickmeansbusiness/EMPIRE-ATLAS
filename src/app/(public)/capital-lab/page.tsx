@@ -4,13 +4,13 @@ import { LinkButton, PageHeader } from "@/components/ui/primitives";
 export const metadata: Metadata = { title: "Capital Lab" };
 
 const tools: Array<[string, string, string]> = [
-  ["Capital Stack Builder", "Senior, junior, mezzanine, preferred and common layers; LTV, LTC, debt-to-equity, weighted cost, coverage and gaps.", "Phase 2"],
+  ["Capital Stack Builder", "Senior, junior, mezzanine, preferred and common layers; LTV, LTC, debt-to-equity, weighted cost, coverage and gaps.", "Live"],
   ["Acquisition Underwriter", "Purchase price to IRR through actual financing cash flows: NOI, cap rate, debt yield, DSCR, cash-on-cash, equity multiple.", "Live"],
-  ["Debt Structuring Lab", "Amortising, interest-only, balloon, fixed, floating, bridge and seller financing with real schedules.", "Live (amortising, IO, balloon)"],
-  ["Private Credit Underwriting", "The lender's side: collateral, LTV, LTC, repayment capacity, income, fees, default and loss severity.", "Phase 2"],
-  ["Distressed Acquisition Simulator", "Distressed property, NPL purchase, discounted payoff, restructuring, foreclosure, workout, REO.", "Phase 2"],
-  ["Equity Waterfall Studio", "Preferred return, return of capital, promote tiers and distributions.", "Phase 2"],
-  ["Portfolio Stress Test", "Rate shocks, value declines, rent and occupancy losses, expense inflation, refinancing disruption.", "Phase 2"],
+  ["Debt Structuring Lab", "Amortising, interest-only, balloon, fixed, floating, bridge and seller financing with real schedules.", "Live"],
+  ["Private Credit Underwriting", "The lender's side: collateral, LTV, LTC, repayment capacity, income, fees, default and loss severity.", "Live"],
+  ["Distressed Acquisition Simulator", "Distressed property, NPL purchase, discounted payoff, restructuring, foreclosure, workout, REO.", "Live"],
+  ["Equity Waterfall Studio", "Preferred return, return of capital, promote tiers and distributions.", "Live"],
+  ["Portfolio Stress Test", "Rate shocks, value declines, rent and occupancy losses, expense inflation, refinancing disruption.", "Live"],
 ];
 
 export default function CapitalLabPublic() {

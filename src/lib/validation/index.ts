@@ -15,7 +15,7 @@ export const signUpSchema = z.object({
   displayName: z.string().trim().min(2).max(80),
 });
 
-export const linkedKindSchema = z.enum(["investor", "institution", "transaction", "claim", "source", "financial_model", "historical_event"]);
+export const linkedKindSchema = z.enum(["investor", "institution", "transaction", "claim", "source", "financial_model", "historical_event", "case_study"]);
 
 export const noteSchema = z.object({
   title: z.string().trim().min(1, "Give the note a title.").max(160),
@@ -49,3 +49,18 @@ export function safeReturnTo(value: string | undefined | null, fallback: string)
   if (!value.startsWith("/") || value.startsWith("//")) return fallback;
   return value;
 }
+
+export const modelKindSchema = z.enum(["underwriter", "debt", "capital_stack", "credit", "distressed", "waterfall", "stress"]);
+
+export const saveModelSchema = z.object({
+  name: z.string().trim().min(1, "Name the model.").max(120),
+  kind: modelKindSchema,
+  assumptions: z.string().max(40_000).transform((s, ctx) => {
+    try { const v = JSON.parse(s) as unknown; if (!v || typeof v !== "object" || Array.isArray(v)) throw new Error("not an object"); return v as Record<string, unknown>; }
+    catch { ctx.addIssue({ code: "custom", message: "Assumptions must be a JSON object." }); return z.NEVER; }
+  }),
+  transactionId: z.string().uuid().optional().nullable(),
+  modelId: z.string().uuid().optional().nullable(),
+  note: z.string().max(500).optional().nullable(),
+  returnTo: z.string().max(512).optional(),
+});
