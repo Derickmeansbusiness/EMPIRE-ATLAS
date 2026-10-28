@@ -39,7 +39,7 @@ engine and decision simulations. Build the real product, not the appearance of o
 src/app/(public)      public site: home, explore, investigations, how-it-works, deal-archaeology, capital-lab,
                       simulations, methodology, membership, sign-in, sign-up
 src/app/(app)         authenticated app: command-center, dossiers, timeline, deals, evidence, network, institutions,
-                      lab, library, profile, roadmap, admin/*
+                      lab, simulator, committee, library, profile, roadmap, admin/*
 src/app/actions       server actions (auth, workspace, admin)
 src/components/ui     primitives + brand mark
 src/components/site   public nav/footer/auth forms
@@ -50,8 +50,9 @@ src/components/lab    financial tools UI
 src/components/network graph (React Flow, client) and schematic geo map
 src/db                client, migrate, schema, migrations/, seed/
 src/finance           core, underwriting, debt, credit, distressed, waterfall, stress
+src/simulation        engine, scenarios/, committee evaluator
 src/lib/auth          password (scrypt), tokens (HMAC cookie), roles/capabilities, service, current-user
-src/lib/data          research / workspace / admin / models / cases / network data access
+src/lib/data          research / workspace / admin / models / cases / network / simulations data access
 src/lib/validation    zod schemas
 src/proxy.ts          edge proxy: path header + early redirect for private routes
 scripts/              migrate, seed, reset, create-user, grant-role, e2e-server
@@ -129,14 +130,22 @@ In CI images with a pre-installed Chromium, set `PLAYWRIGHT_CHROMIUM_PATH=/path/
 
 ## Current implementation status (2026-10-28)
 
-Phases 0–3 are implemented and tested. See `docs/ROADMAP.md` and `docs/reports/PHASE-{1,2,3}-REPORT.md` for
+Phases 0–4 are implemented and tested. See `docs/ROADMAP.md` and `docs/reports/PHASE-{1,2,3,4}-REPORT.md` for
 exact scope, test results and pending work.
 Live: public site, auth, command center, Sam Zell dossier (12 divisions, 32 claims, 29 sources, 15 timeline
 events), Equity Office sale reconstruction with attached hypothetical models, evidence viewer with review
 history, notes, bookmarks, roadmap of 15 queued subjects, all seven Capital Architecture Lab tools with saved and
 versioned models, the fictional Meridian Court case, the Capital Network Explorer (graph, map, table, filters)
-with institution pages, admin (users, claims review, content status, audit).
-Next: Phase 4 (simulator and investment committee). Planned: everything listed as "planned" in `src/lib/modules.ts`.
+with institution pages, the Empire Simulator (two scenarios, sealed outcomes, scored debriefs), the Investment
+Committee Chamber (rules-based evaluation and memo), admin (users, claims review, content status, audit).
+Next: Phase 5 (synthesis, doctrine, ritual, program, AI historian, memberships). Planned: everything listed as
+"planned" in `src/lib/modules.ts`.
+
+Simulation conventions: scenarios are TypeScript modules in `src/simulation/scenarios/` registered in
+`src/simulation/index.ts`; `apply` functions must be pure; scores are fixed per option at authoring time; every
+`historical.claims` and `evidence` entry must be a real claim slug (the unit test checks); pages render only
+`playerView()` until the attempt is complete. Committee evaluation (`src/simulation/committee.ts`) is rules-based
+and every point carries a finding string shown in the memo.
 
 Network conventions: `loadNetworkGraph()` builds nodes/edges once; `filterGraph()` is pure and unit-tested;
 `layoutGraph()` is deterministic (investors centre, institutions middle ring, transactions outer ring). Edges

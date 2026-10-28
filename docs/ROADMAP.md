@@ -35,11 +35,21 @@ network and institution pages. Migration 0004 adds coordinates and geo labels.
 Deferred from Phase 3: a basemap (needs a licensed tile source), asset-level pins (the `assets` table is still
 empty; locations today are headquarters and transaction locations), and institutional dossiers with twelve divisions.
 
-## Phase 4 — Empire Simulator & Investment Committee — Next
-Scenario engine with sealed outcomes; decision tracking; financial consequences; scoring; historical comparison;
-debrief; the Zell lender-negotiation exercise; committee submissions, evaluation framework, memo generation.
+## Phase 4 — Empire Simulator & Investment Committee — Live
+Pure scenario engine (`src/simulation/engine.ts`): stages with briefings and options, conditional stages,
+deterministic state transitions, scoring on five dimensions fixed at authoring time, and a `playerView` that
+exposes no consequences, feedback, scores or history before the final decision. Two scenarios: the 2006–07
+office-portfolio sale (historical, four decisions, cited debrief) and the Meridian Court lender negotiation
+(fictional). Attempts are stored and scored on completion; the debrief compares each choice with the documented
+record and links the claims. Investment Committee Chamber: nine-section submission, optional attached underwriting
+model, transparent rules-based evaluation on six dimensions (evidence quality, financial correctness, risk
+identification, capital efficiency, downside resilience via the stress test, strategic consistency), verdict and
+generated memo. Migration 0005.
 
-## Phase 5 — Complete research experience
+Deferred: a scenario editor in the admin UI (scenarios are TypeScript modules); more scenarios (land acquisition
+before expansion, subsidised housing finance, sale-leaseback design, portfolio refinancing, rate shock, build vs. debt vs. buy).
+
+## Phase 5 — Complete research experience — Next
 Rich-text notes, folders, reading lists, exports; strategy synthesis and doctrine (exportable document);
 weekly ritual tracking and reminders; six-month program; quizzes and competency progression; AI Investment
 Historian with retrieval over the approved corpus (server-side key, explicit unconfigured state); membership

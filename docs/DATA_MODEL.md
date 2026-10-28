@@ -48,9 +48,14 @@ Typed mirror: `src/db/schema.ts`. Diagram below is logical; all primary keys are
 `investors`, `institutions` and `transactions` carry `latitude`, `longitude` and `geo_label` (headquarters or the
 transaction's stated location). The schematic map draws only nodes with coordinates.
 
-## Planned tables (Phase 4–5; not yet migrated)
-simulations, simulation_scenarios, simulation_attempts, investment_committee_submissions, quizzes, quiz_results,
-market_data_series (with source + as_of).
+## Simulations & committee (migration 0005)
+- **simulation_attempts** (user_id, scenario_slug, status in_progress|completed|abandoned, choices jsonb, score
+  jsonb, final_state jsonb, timestamps). Scenarios themselves are code (`src/simulation/scenarios`), not rows.
+- **investment_committee_submissions** (user_id, nine text sections, recommendation, model_id, model_snapshot,
+  evaluation jsonb, memo_markdown, score, verdict).
+
+## Planned tables (Phase 5; not yet migrated)
+quizzes, quiz_results, market_data_series (with source + as_of), ritual/program progress.
 
 ## Enumerations
 user_role, user_status, publish_status, verification_status (verified_primary | supported_secondary | contested |

@@ -64,3 +64,19 @@ export const saveModelSchema = z.object({
   note: z.string().max(500).optional().nullable(),
   returnTo: z.string().max(512).optional(),
 });
+
+export const simulationChoiceSchema = z.object({ attemptId: z.string().uuid(), stageKey: z.string().min(1).max(64), optionKey: z.string().min(1).max(64) });
+
+export const committeeSubmissionSchema = z.object({
+  title: z.string().trim().min(3).max(160),
+  thesis: z.string().trim().min(40, "Write the investment thesis (at least 40 characters).").max(20_000),
+  assetDetails: z.string().trim().max(10_000).default(""),
+  sourcesAndUses: z.string().trim().max(10_000).default(""),
+  assumptionsNarrative: z.string().trim().max(10_000).default(""),
+  capitalStack: z.string().trim().max(10_000).default(""),
+  risks: z.string().trim().min(20, "List the major risks.").max(10_000),
+  sensitivity: z.string().trim().max(10_000).default(""),
+  exitStrategy: z.string().trim().min(10, "State the exit strategy.").max(10_000),
+  recommendation: z.enum(["approve", "approve_with_conditions", "decline"]),
+  modelId: z.string().uuid().optional().nullable(),
+});

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookMarked, Building2, Clock, FlaskConical, LayoutDashboard, Library, Network, ScrollText, Settings, ShieldCheck, Users, FileSearch } from "lucide-react";
+import { BookMarked, Building2, Clock, FlaskConical, Gavel, LayoutDashboard, Library, Network, ScrollText, Settings, ShieldCheck, Swords, Users, FileSearch } from "lucide-react";
 import { Wordmark } from "@/components/ui/brand";
 import { NavLink } from "./nav-link";
 import { signOutAction } from "@/app/actions/auth";
@@ -16,6 +16,8 @@ const research = [
   { href: "/evidence/sources", label: "Sources & Evidence", icon: FileSearch },
   { href: "/network", label: "Capital Network", icon: Network },
   { href: "/lab", label: "Capital Architecture Lab", icon: FlaskConical },
+  { href: "/simulator", label: "Empire Simulator", icon: Swords },
+  { href: "/committee", label: "Investment Committee", icon: Gavel },
   { href: "/library", label: "Research Library", icon: Library },
 ];
 
@@ -33,7 +35,7 @@ export function AppShell({ user, children }: { user: User; children: React.React
       </div>
       <div>
         <p className="eyebrow mb-2 px-2">Later phases</p>
-        <NavLink href="/roadmap" muted><BookMarked className="h-4 w-4" aria-hidden="true" /> Simulator, Committee, Synthesis…</NavLink>
+        <NavLink href="/roadmap" muted><BookMarked className="h-4 w-4" aria-hidden="true" /> Synthesis, Doctrine, Ritual…</NavLink>
       </div>
       {isAdmin && (
         <div>

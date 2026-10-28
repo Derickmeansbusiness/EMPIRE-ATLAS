@@ -5,6 +5,7 @@ import { getDb } from "@/db/client";
 import { requireUser } from "@/lib/auth/current-user";
 import { evidenceSummary, getDossier, listInvestorRoadmap, listTransactions } from "@/lib/data/research";
 import { listBookmarks, listNotes, recentActivity, workspaceSummary } from "@/lib/data/workspace";
+import { simulationSummary } from "@/lib/data/simulations";
 import { Alert, Card, Eyebrow, LinkButton, PageHeader, Stat } from "@/components/ui/primitives";
 import { VerificationBadge } from "@/components/research/status";
 import { formatHistoricalDate, formatRelative, researcherLabel } from "@/lib/format";
@@ -17,16 +18,16 @@ const RITUAL = [
   ["Tuesday", "Reconstruct acquisitions and financial structures", "/deals"],
   ["Wednesday", "Map networks, strategies and institutional relationships", "/network"],
   ["Thursday", "Translate historical principles into a modern U.S. case", "/lab"],
-  ["Friday", "Present findings to an investment committee", "/roadmap"],
+  ["Friday", "Present findings to an investment committee", "/committee"],
 ] as const;
 
 export default async function CommandCenterPage({ searchParams }: { searchParams: Promise<{ welcome?: string; denied?: string }> }) {
   const user = await requireUser();
   const db = await getDb();
   const sp = await searchParams;
-  const [summary, notes, bookmarks, activity, roadmap, txs, evidence, zell] = await Promise.all([
+  const [summary, notes, bookmarks, activity, roadmap, txs, evidence, zell, sims] = await Promise.all([
     workspaceSummary(db, user.id), listNotes(db, user.id, { limit: 5 }), listBookmarks(db, user.id), recentActivity(db, user.id, 6),
-    listInvestorRoadmap(db), listTransactions(db), evidenceSummary(db), getDossier(db, "sam-zell"),
+    listInvestorRoadmap(db), listTransactions(db), evidenceSummary(db), getDossier(db, "sam-zell"), simulationSummary(db, user.id),
   ]);
   const published = roadmap.filter((i) => i.publishStatus === "published");
   const featuredInvestor = published[0];
@@ -40,7 +41,11 @@ export default async function CommandCenterPage({ searchParams }: { searchParams
       ? { title: "Reconstruct the Equity Office sale", body: "Follow the sources and uses, and see what is documented versus estimated.", href: "/deals/equity-office-sale-2007" }
       : summary.notes === 0
         ? { title: "Write your first research note", body: "Attach it to a claim so it stays connected to the evidence.", href: "/dossiers/sam-zell#evidence" }
-        : { title: "Model a modern distressed acquisition", body: "Take the Zell principles into the underwriter with explicitly hypothetical inputs.", href: "/lab/underwriter" };
+        : sims.completed === 0
+          ? { title: "Run the office-portfolio scenario", body: "Decide at the top of the cycle with only what was knowable then; the record is revealed afterwards.", href: "/simulator" }
+          : sims.submissions === 0
+            ? { title: "Defend a deal before the committee", body: "Attach a saved underwriting model and submit a thesis for a scored memo.", href: "/committee/new" }
+            : { title: "Model a modern distressed acquisition", body: "Take the Zell principles into the underwriter with explicitly hypothetical inputs.", href: "/lab/underwriter" };
 
   return (
     <>
@@ -140,9 +145,9 @@ export default async function CommandCenterPage({ searchParams }: { searchParams
         </Card>
         <Card>
           <Eyebrow className="mb-2">Financial modelling &amp; simulations</Eyebrow>
-          <p className="text-sm text-platinum/80">Saved models: <span className="numeric text-ivory">{summary.models}</span>. Principles: <span className="numeric text-ivory">{summary.principles}</span>.</p>
-          <p className="mt-2 text-xs text-slate-mist">All seven lab tools are live with saved, versioned models. Simulations and the doctrine workspace are scheduled for later phases.</p>
-          <LinkButton href="/lab" variant="secondary" className="mt-3 text-xs">Open the lab</LinkButton>
+          <p className="text-sm text-platinum/80">Saved models: <span className="numeric text-ivory">{summary.models}</span>. Simulations completed: <span className="numeric text-ivory">{sims.completed}</span>{sims.bestScore != null ? <> (best <span className="numeric text-ivory">{sims.bestScore}</span>/100)</> : null}. Committee submissions: <span className="numeric text-ivory">{sims.submissions}</span>.</p>
+          <p className="mt-2 text-xs text-slate-mist">{sims.inProgress > 0 ? `${sims.inProgress} scenario in progress.` : "Principles and the doctrine workspace arrive in Phase 5."}</p>
+          <div className="mt-3 flex gap-2"><LinkButton href="/lab" variant="secondary" className="text-xs">Lab</LinkButton><LinkButton href="/simulator" variant="secondary" className="text-xs">Simulator</LinkButton><LinkButton href="/committee" variant="secondary" className="text-xs">Committee</LinkButton></div>
         </Card>
         <Card>
           <Eyebrow className="mb-2">Platform status</Eyebrow>

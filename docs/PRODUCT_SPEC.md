@@ -66,11 +66,17 @@ re-underwriting with a refinancing-gap check). Inputs live in the URL; models ar
 a model can be attached to a historical transaction and is always labelled hypothetical. The fictional Meridian
 Court case links the Zell principles to lab presets.
 
-### F. Empire Strategy Simulator (planned, Phase 4)
+### F. Empire Strategy Simulator (live)
+Scenario engine with sealed outcomes, conditional stages, deterministic consequences and five-dimension scoring
+fixed at authoring time; two scenarios (historical office-portfolio sale; fictional Meridian Court negotiation);
+attempt history; debrief with per-stage feedback, modelled position, documented history with claim citations,
+and the closest documented choice.
 ### G. Strategy Synthesis Engine & Doctrine (planned, Phase 5; tables exist)
 ### H. Research Workspace (live core: notes with links/tags/search, bookmarks; folders, rich text, reading lists, exports in Phase 5)
 ### I. AI Investment Historian (planned, Phase 5; explicit "not configured" state required)
-### J. Investment Committee Chamber (planned, Phase 4)
+### J. Investment Committee Chamber (live)
+Nine-section submission with an optional attached underwriting model; rules-based evaluation on six dimensions
+with every point explained; verdict thresholds; generated memo; submission history.
 ### K. Weekly Research Ritual (surface live on the dashboard; tracking/reminders Phase 5)
 ### L. Six-Month Research Program (planned, Phase 5)
 

@@ -438,6 +438,44 @@ export const caseStudies = pgTable("case_studies", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().default(now()),
 });
 
+export const attemptStatusEnum = pgEnum("attempt_status", ["in_progress", "completed", "abandoned"]);
+export const committeeVerdictEnum = pgEnum("committee_verdict", ["approved", "approved_with_conditions", "resubmit", "declined"]);
+
+export const simulationAttempts = pgTable("simulation_attempts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  scenarioSlug: text("scenario_slug").notNull(),
+  status: attemptStatusEnum("status").notNull().default("in_progress"),
+  choices: jsonb("choices").notNull().default(sql`'[]'::jsonb`),
+  score: jsonb("score"),
+  finalState: jsonb("final_state"),
+  startedAt: timestamp("started_at", { withTimezone: true }).notNull().default(now()),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().default(now()),
+});
+
+export const investmentCommitteeSubmissions = pgTable("investment_committee_submissions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  thesis: text("thesis").notNull(),
+  assetDetails: text("asset_details").notNull().default(""),
+  sourcesAndUses: text("sources_and_uses").notNull().default(""),
+  assumptionsNarrative: text("assumptions_narrative").notNull().default(""),
+  capitalStack: text("capital_stack").notNull().default(""),
+  risks: text("risks").notNull().default(""),
+  sensitivity: text("sensitivity").notNull().default(""),
+  exitStrategy: text("exit_strategy").notNull().default(""),
+  recommendation: text("recommendation").notNull(),
+  modelId: uuid("model_id").references(() => financialModels.id, { onDelete: "set null" }),
+  modelSnapshot: jsonb("model_snapshot"),
+  evaluation: jsonb("evaluation").notNull(),
+  memoMarkdown: text("memo_markdown").notNull(),
+  score: integer("score").notNull(),
+  verdict: committeeVerdictEnum("verdict").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+});
+
 export type User = typeof users.$inferSelect;
 export type Investor = typeof investors.$inferSelect;
 export type Institution = typeof institutions.$inferSelect;
@@ -451,3 +489,5 @@ export type CapitalStackItem = typeof capitalStackItems.$inferSelect;
 export type DossierSection = typeof dossierSections.$inferSelect;
 export type FinancialModel = typeof financialModels.$inferSelect;
 export type CaseStudy = typeof caseStudies.$inferSelect;
+export type SimulationAttempt = typeof simulationAttempts.$inferSelect;
+export type CommitteeSubmissionRow = typeof investmentCommitteeSubmissions.$inferSelect;
