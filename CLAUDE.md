@@ -38,8 +38,8 @@ engine and decision simulations. Build the real product, not the appearance of o
 ```
 src/app/(public)      public site: home, explore, investigations, how-it-works, deal-archaeology, capital-lab,
                       simulations, methodology, membership, sign-in, sign-up
-src/app/(app)         authenticated app: command-center, dossiers, timeline, deals, evidence, network, lab,
-                      library, profile, roadmap, admin/*
+src/app/(app)         authenticated app: command-center, dossiers, timeline, deals, evidence, network, institutions,
+                      lab, library, profile, roadmap, admin/*
 src/app/actions       server actions (auth, workspace, admin)
 src/components/ui     primitives + brand mark
 src/components/site   public nav/footer/auth forms
@@ -47,10 +47,11 @@ src/components/app    app shell, nav links
 src/components/research  evidence badges, claim rendering, claim card, timeline, sources & uses, review form
 src/components/workspace note forms
 src/components/lab    financial tools UI
+src/components/network graph (React Flow, client) and schematic geo map
 src/db                client, migrate, schema, migrations/, seed/
 src/finance           core, underwriting, debt, credit, distressed, waterfall, stress
 src/lib/auth          password (scrypt), tokens (HMAC cookie), roles/capabilities, service, current-user
-src/lib/data          research / workspace / admin / models / cases data access
+src/lib/data          research / workspace / admin / models / cases / network data access
 src/lib/validation    zod schemas
 src/proxy.ts          edge proxy: path header + early redirect for private routes
 scripts/              migrate, seed, reset, create-user, grant-role, e2e-server
@@ -128,13 +129,18 @@ In CI images with a pre-installed Chromium, set `PLAYWRIGHT_CHROMIUM_PATH=/path/
 
 ## Current implementation status (2026-10-28)
 
-Phases 0, 1 and 2 are implemented and tested. See `docs/ROADMAP.md` and `docs/reports/PHASE-1-REPORT.md`,
-`docs/reports/PHASE-2-REPORT.md` for exact scope, test results and pending work.
+Phases 0–3 are implemented and tested. See `docs/ROADMAP.md` and `docs/reports/PHASE-{1,2,3}-REPORT.md` for
+exact scope, test results and pending work.
 Live: public site, auth, command center, Sam Zell dossier (12 divisions, 32 claims, 29 sources, 15 timeline
 events), Equity Office sale reconstruction with attached hypothetical models, evidence viewer with review
 history, notes, bookmarks, roadmap of 15 queued subjects, all seven Capital Architecture Lab tools with saved and
-versioned models, the fictional Meridian Court case, admin (users, claims review, content status, audit).
-Next: Phase 3 (network graph). Planned: everything listed as "planned" in `src/lib/modules.ts`.
+versioned models, the fictional Meridian Court case, the Capital Network Explorer (graph, map, table, filters)
+with institution pages, admin (users, claims review, content status, audit).
+Next: Phase 4 (simulator and investment committee). Planned: everything listed as "planned" in `src/lib/modules.ts`.
+
+Network conventions: `loadNetworkGraph()` builds nodes/edges once; `filterGraph()` is pure and unit-tested;
+`layoutGraph()` is deterministic (investors centre, institutions middle ring, transactions outer ring). Edges
+without a claim must be `is_hypothetical = true` (database CHECK) and render dotted sky-blue.
 
 Lab conventions: tool inputs live in the URL in UI units (percent as percent); `withSavedModel()` merges a saved
 model's assumptions under URL params; `SaveModelPanel` posts the same UI-unit values so reloads are lossless.

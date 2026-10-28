@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.12",
+    "@xyflow/react": "12.12.0",
     "drizzle-orm": "0.45.4",
     "lucide-react": "1.63.0",
     "motion": "14.7.1",
@@ -44,5 +45,7 @@
     "vitest": "5.0.5"
   },
   "packageManager": "pnpm@10.28.0",
-  "engines": { "node": ">=20.9" }
+  "engines": {
+    "node": ">=20.9"
+  }
 }

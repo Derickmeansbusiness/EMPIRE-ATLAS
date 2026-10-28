@@ -56,6 +56,7 @@ export interface SeedInstitution {
   headquarters?: string;
   summary?: string;
   published?: boolean;
+  geo?: { lat: number; lng: number; label: string };
 }
 
 export interface SeedStackItem {
@@ -82,6 +83,7 @@ export interface SeedTransaction {
   headlineValueUsd?: number;
   headlineValueLabel: string;
   headlineValueStatus: DataStatus;
+  geo?: { lat: number; lng: number; label: string };
   summary: string;
   rightsAcquired: string;
   operatingStrategy: string;
@@ -116,6 +118,7 @@ export interface SeedInvestorDossier {
   investor: {
     slug: string; fullName: string; shortName: string; bornYear?: number; diedYear?: number; nationality?: string;
     headline: string; summary: string; eraLabel: string; primaryAssetClasses: string[]; roadmapRank: number;
+    geo?: { lat: number; lng: number; label: string };
   };
   sources: SeedSource[];
   institutions: SeedInstitution[];

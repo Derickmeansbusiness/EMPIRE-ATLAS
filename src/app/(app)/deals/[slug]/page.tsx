@@ -84,7 +84,7 @@ export default async function DealPage({ params, searchParams }: { params: Promi
             <ul className="space-y-2 text-sm">
               {t.participants.map(({ p, investor, institution }) => (
                 <li key={p.id}>
-                  <p className="text-ivory">{investor ? <Link href={`/dossiers/${investor.slug}`} className="hover:text-gold">{investor.fullName}</Link> : institution?.name}</p>
+                  <p className="text-ivory">{investor ? <Link href={`/dossiers/${investor.slug}`} className="hover:text-gold">{investor.fullName}</Link> : institution ? <Link href={`/institutions/${institution.slug}`} className="hover:text-gold">{institution.name}</Link> : null}</p>
                   <p className="text-xs text-slate-mist">{p.role}</p>
                 </li>
               ))}

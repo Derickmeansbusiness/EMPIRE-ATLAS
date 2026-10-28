@@ -24,11 +24,18 @@ Python-verified expectations.
 Deferred from Phase 2: a hypothetical capital-stack overlay rendered inside the historical sources-and-uses table
 (today models are listed beside the record and opened in the lab).
 
-## Phase 3 — Network intelligence — Next
-React Flow graph on `relationships`; filters by investor, year, geography, asset class, relationship type,
-institution, transaction, evidence confidence; node detail panels with linked evidence; geographic asset view.
+## Phase 3 — Network intelligence — Live
+Interactive React Flow graph on `relationships` (concentric deterministic layout, edge style by verification
+status, node detail panel with every relationship and its evidence link); filters by investor, institution,
+transaction, relationship type, evidence confidence, geography, asset class and year range; table view;
+schematic geographic view (equirectangular projection over documented coordinates, explicitly not a basemap);
+institution pages (`/institutions/[slug]`) with ego-network and claims; dossier and deal pages link into the
+network and institution pages. Migration 0004 adds coordinates and geo labels.
 
-## Phase 4 — Empire Simulator & Investment Committee
+Deferred from Phase 3: a basemap (needs a licensed tile source), asset-level pins (the `assets` table is still
+empty; locations today are headquarters and transaction locations), and institutional dossiers with twelve divisions.
+
+## Phase 4 — Empire Simulator & Investment Committee — Next
 Scenario engine with sealed outcomes; decision tracking; financial consequences; scoring; historical comparison;
 debrief; the Zell lender-negotiation exercise; committee submissions, evaluation framework, memo generation.
 

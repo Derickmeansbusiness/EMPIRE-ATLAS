@@ -4,7 +4,7 @@
  * this file gives the application typed query access. Keep both in sync.
  */
 import {
-  pgTable, pgEnum, uuid, text, integer, bigint, boolean, timestamp, date, numeric, jsonb, unique, index,
+  pgTable, pgEnum, uuid, text, integer, bigint, boolean, timestamp, date, numeric, jsonb, unique, index, doublePrecision,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -121,6 +121,9 @@ export const investors = pgTable("investors", {
   publishStatus: publishStatusEnum("publish_status").notNull().default("draft"),
   researchStatus: text("research_status").notNull().default("queued"),
   roadmapRank: integer("roadmap_rank"),
+  latitude: doublePrecision("latitude"),
+  longitude: doublePrecision("longitude"),
+  geoLabel: text("geo_label"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().default(now()),
 });
@@ -134,6 +137,9 @@ export const institutions = pgTable("institutions", {
   headquarters: text("headquarters"),
   summary: text("summary"),
   publishStatus: publishStatusEnum("publish_status").notNull().default("draft"),
+  latitude: doublePrecision("latitude"),
+  longitude: doublePrecision("longitude"),
+  geoLabel: text("geo_label"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
 });
 
@@ -171,6 +177,9 @@ export const transactions = pgTable("transactions", {
   verifiedOutcome: text("verified_outcome"),
   openQuestions: text("open_questions"),
   publishStatus: publishStatusEnum("publish_status").notNull().default("draft"),
+  latitude: doublePrecision("latitude"),
+  longitude: doublePrecision("longitude"),
+  geoLabel: text("geo_label"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().default(now()),
 });

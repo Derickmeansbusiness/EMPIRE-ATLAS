@@ -51,9 +51,11 @@ status, summary, rights acquired, operating strategy, subsequent events, exit/st
 questions, sources & uses with documented / estimate / unknown / hypothetical lines, transaction timeline, evidence
 list, notes, and the user's attached hypothetical models (stored apart from the record).
 
-### D. Capital Network Explorer (partial)
-Relationships table with evidence badges and relationship-type filter; interactive graph (React Flow) and
-geography/year/asset-class filters are Phase 3.
+### D. Capital Network Explorer (live)
+Interactive graph (React Flow) with edge style by verification status and a node detail panel listing every
+relationship with its evidence link; filters by investor, institution, transaction, relationship type, evidence
+confidence, geography, asset class and year; table view; schematic geographic view; institution pages. A
+relationship without a claim can only exist as `is_hypothetical` and renders dotted.
 
 ### E. Capital Architecture Lab (live)
 Seven tools: Capital Stack Builder, Acquisition Underwriter, Debt Structuring Lab (fixed, IO, balloon, floating,

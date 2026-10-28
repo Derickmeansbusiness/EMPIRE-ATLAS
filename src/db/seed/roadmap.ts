@@ -26,15 +26,15 @@ export const roadmapInvestors: RoadmapInvestor[] = [
 ];
 
 export interface RoadmapInstitution {
-  slug: string; name: string; kind: "company" | "investment_fund" | "ownership_entity" | "operating_company"; headquarters?: string; summary: string;
+  slug: string; name: string; kind: "company" | "investment_fund" | "ownership_entity" | "operating_company"; headquarters?: string; summary: string; geo?: { lat: number; lng: number; label: string };
 }
 
 export const roadmapInstitutions: RoadmapInstitution[] = [
-  { slug: "related-companies", name: "Related Companies", kind: "company", headquarters: "New York, New York", summary: "Stephen Ross's development firm. Queued." },
-  { slug: "irvine-company", name: "Irvine Company", kind: "company", headquarters: "Newport Beach, California", summary: "Donald Bren's master-planning and ownership platform. Queued." },
-  { slug: "starwood-capital", name: "Starwood Capital Group", kind: "investment_fund", headquarters: "Miami Beach, Florida", summary: "Barry Sternlicht's investment firm. Queued." },
-  { slug: "brookfield", name: "Brookfield", kind: "investment_fund", headquarters: "Toronto / New York", summary: "Bruce Flatt's real-assets manager. Queued." },
-  { slug: "oaktree-capital", name: "Oaktree Capital Management", kind: "investment_fund", headquarters: "Los Angeles, California", summary: "Howard Marks's credit manager. Queued." },
-  { slug: "mcdonalds", name: "McDonald's Corporation", kind: "operating_company", headquarters: "Chicago, Illinois", summary: "Operating platform with a real estate-backed franchise model. Queued." },
-  { slug: "rockefeller-center-development", name: "Rockefeller Center development entities", kind: "ownership_entity", headquarters: "New York, New York", summary: "The entities behind the 1930s development. Queued." },
+  { slug: "related-companies", geo: { lat: 40.754, lng: -74.001, label: "New York, NY" }, name: "Related Companies", kind: "company", headquarters: "New York, New York", summary: "Stephen Ross's development firm. Queued." },
+  { slug: "irvine-company", geo: { lat: 33.6189, lng: -117.9289, label: "Newport Beach, CA" }, name: "Irvine Company", kind: "company", headquarters: "Newport Beach, California", summary: "Donald Bren's master-planning and ownership platform. Queued." },
+  { slug: "starwood-capital", geo: { lat: 25.7907, lng: -80.13, label: "Miami Beach, FL" }, name: "Starwood Capital Group", kind: "investment_fund", headquarters: "Miami Beach, Florida", summary: "Barry Sternlicht's investment firm. Queued." },
+  { slug: "brookfield", geo: { lat: 43.6475, lng: -79.38, label: "Toronto / New York" }, name: "Brookfield", kind: "investment_fund", headquarters: "Toronto / New York", summary: "Bruce Flatt's real-assets manager. Queued." },
+  { slug: "oaktree-capital", geo: { lat: 34.0522, lng: -118.2437, label: "Los Angeles, CA" }, name: "Oaktree Capital Management", kind: "investment_fund", headquarters: "Los Angeles, California", summary: "Howard Marks's credit manager. Queued." },
+  { slug: "mcdonalds", geo: { lat: 41.8819, lng: -87.6278, label: "Chicago, IL" }, name: "McDonald's Corporation", kind: "operating_company", headquarters: "Chicago, Illinois", summary: "Operating platform with a real estate-backed franchise model. Queued." },
+  { slug: "rockefeller-center-development", geo: { lat: 40.7587, lng: -73.9787, label: "New York, NY" }, name: "Rockefeller Center development entities", kind: "ownership_entity", headquarters: "New York, New York", summary: "The entities behind the 1930s development. Queued." },
 ];

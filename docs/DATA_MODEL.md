@@ -44,6 +44,10 @@ Typed mirror: `src/db/schema.ts`. Diagram below is logical; all primary keys are
   body_markdown, disclaimer, model_presets jsonb, publish_status). Fictional cases carry a mandatory disclaimer.
 - `linked_object_kind` gained `case_study` so notes and bookmarks can attach to a case.
 
+## Geography (migration 0004)
+`investors`, `institutions` and `transactions` carry `latitude`, `longitude` and `geo_label` (headquarters or the
+transaction's stated location). The schematic map draws only nodes with coordinates.
+
 ## Planned tables (Phase 4–5; not yet migrated)
 simulations, simulation_scenarios, simulation_attempts, investment_committee_submissions, quizzes, quiz_results,
 market_data_series (with source + as_of).

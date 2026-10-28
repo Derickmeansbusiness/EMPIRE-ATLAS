@@ -132,12 +132,12 @@ export default async function DossierPage({ params, searchParams }: { params: Pr
             <ul className="space-y-1.5 text-xs text-platinum/85">
               {relationships.filter((r) => r.institution).map((r) => (
                 <li key={r.rel.id} className="flex items-start justify-between gap-2">
-                  <span><span className="text-slate-mist">{r.rel.relationship.replace(/_/g, " ")}</span> {r.institution!.name}{r.rel.startYear ? <span className="text-slate-mist"> · {r.rel.startYear}</span> : null}</span>
+                  <span><span className="text-slate-mist">{r.rel.relationship.replace(/_/g, " ")}</span> <Link href={`/institutions/${r.institution!.slug}`} className="hover:text-gold">{r.institution!.name}</Link>{r.rel.startYear ? <span className="text-slate-mist"> · {r.rel.startYear}</span> : null}</span>
                   {r.claim && <Link href={`/evidence/claims/${r.claim.slug}`} className="shrink-0"><VerificationBadge status={r.claim.verificationStatus} size="xs" /></Link>}
                 </li>
               ))}
             </ul>
-            <Link href="/network" className="mt-3 inline-block text-xs text-slate-mist hover:text-gold">Capital network →</Link>
+            <Link href={`/network?investor=${investor.slug}`} className="mt-3 inline-block text-xs text-slate-mist hover:text-gold">Capital network →</Link>
           </Card>
           {quotes.length > 0 && (
             <Card>

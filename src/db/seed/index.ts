@@ -23,11 +23,12 @@ export async function seedResearch(db: AtlasDb): Promise<{ investors: number; cl
       slug: d.investor.slug, fullName: d.investor.fullName, shortName: d.investor.shortName, bornYear: d.investor.bornYear ?? null,
       diedYear: d.investor.diedYear ?? null, nationality: d.investor.nationality ?? null, headline: d.investor.headline, summary: d.investor.summary,
       eraLabel: d.investor.eraLabel, primaryAssetClasses: d.investor.primaryAssetClasses, publishStatus: "published", researchStatus: "published",
-      roadmapRank: d.investor.roadmapRank,
+      roadmapRank: d.investor.roadmapRank, latitude: d.investor.geo?.lat ?? null, longitude: d.investor.geo?.lng ?? null, geoLabel: d.investor.geo?.label ?? null,
     }).onConflictDoUpdate({ target: investors.slug, set: {
       fullName: d.investor.fullName, shortName: d.investor.shortName, bornYear: d.investor.bornYear ?? null, diedYear: d.investor.diedYear ?? null,
       headline: d.investor.headline, summary: d.investor.summary, eraLabel: d.investor.eraLabel, primaryAssetClasses: d.investor.primaryAssetClasses,
       publishStatus: "published", researchStatus: "published", roadmapRank: d.investor.roadmapRank, updatedAt: new Date(),
+      latitude: d.investor.geo?.lat ?? null, longitude: d.investor.geo?.lng ?? null, geoLabel: d.investor.geo?.label ?? null,
     } }).returning();
     const investorId = investor!.id;
 
@@ -36,7 +37,8 @@ export async function seedResearch(db: AtlasDb): Promise<{ investors: number; cl
       const [row] = await db.insert(institutions).values({
         slug: inst.slug, name: inst.name, kind: inst.kind, foundedYear: inst.foundedYear ?? null, headquarters: inst.headquarters ?? null,
         summary: inst.summary ?? null, publishStatus: inst.published === false ? "draft" : "published",
-      }).onConflictDoUpdate({ target: institutions.slug, set: { name: inst.name, kind: inst.kind, foundedYear: inst.foundedYear ?? null, headquarters: inst.headquarters ?? null, summary: inst.summary ?? null, publishStatus: inst.published === false ? "draft" : "published" } }).returning();
+        latitude: inst.geo?.lat ?? null, longitude: inst.geo?.lng ?? null, geoLabel: inst.geo?.label ?? null,
+      }).onConflictDoUpdate({ target: institutions.slug, set: { name: inst.name, kind: inst.kind, foundedYear: inst.foundedYear ?? null, headquarters: inst.headquarters ?? null, summary: inst.summary ?? null, publishStatus: inst.published === false ? "draft" : "published", latitude: inst.geo?.lat ?? null, longitude: inst.geo?.lng ?? null, geoLabel: inst.geo?.label ?? null } }).returning();
       institutionIds.set(inst.slug, row!.id);
     }
 
@@ -60,7 +62,7 @@ export async function seedResearch(db: AtlasDb): Promise<{ investors: number; cl
         headlineValueUsd: t.headlineValueUsd != null ? String(t.headlineValueUsd) : null, headlineValueLabel: t.headlineValueLabel,
         headlineValueStatus: t.headlineValueStatus, summary: t.summary, rightsAcquired: t.rightsAcquired, operatingStrategy: t.operatingStrategy,
         subsequentEvents: t.subsequentEvents, exitOrStatus: t.exitOrStatus, verifiedOutcome: t.verifiedOutcome, openQuestions: t.openQuestions,
-        publishStatus: "published" as const,
+        publishStatus: "published" as const, latitude: t.geo?.lat ?? null, longitude: t.geo?.lng ?? null, geoLabel: t.geo?.label ?? null,
       };
       const [row] = await db.insert(transactions).values(values).onConflictDoUpdate({ target: transactions.slug, set: { ...values, updatedAt: new Date() } }).returning();
       txIds.set(t.slug, row!.id);
@@ -183,7 +185,7 @@ export async function seedResearch(db: AtlasDb): Promise<{ investors: number; cl
     }).onConflictDoNothing({ target: investors.slug });
   }
   for (const i of roadmapInstitutions) {
-    await db.insert(institutions).values({ slug: i.slug, name: i.name, kind: i.kind, headquarters: i.headquarters ?? null, summary: i.summary, publishStatus: "draft" })
+    await db.insert(institutions).values({ slug: i.slug, name: i.name, kind: i.kind, headquarters: i.headquarters ?? null, summary: i.summary, publishStatus: "draft", latitude: i.geo?.lat ?? null, longitude: i.geo?.lng ?? null, geoLabel: i.geo?.label ?? null })
       .onConflictDoNothing({ target: institutions.slug });
   }
 

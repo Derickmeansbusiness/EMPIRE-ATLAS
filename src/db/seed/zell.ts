@@ -30,6 +30,7 @@ export const zellDossier: SeedInvestorDossier = {
     eraLabel: "1968 – 2023",
     primaryAssetClasses: ["Multifamily", "Office", "Manufactured housing", "Distressed corporate debt", "Operating companies"],
     roadmapRank: 1,
+    geo: { lat: 41.8819, lng: -87.6278, label: "Chicago, IL" },
   },
 
   sources: [
@@ -65,18 +66,18 @@ export const zellDossier: SeedInvestorDossier = {
   ],
 
   institutions: [
-    { slug: "equity-group-investments", name: "Equity Group Investments", kind: "investment_fund", headquarters: "Chicago, Illinois", summary: "Zell's private investment firm; the holding platform for his real estate and corporate investments.", published: true },
-    { slug: "equity-residential", name: "Equity Residential", kind: "ownership_entity", foundedYear: 1993, headquarters: "Chicago, Illinois", summary: "Apartment REIT formed in March 1993 to carry on the multifamily business of Zell-controlled entities; listed on the NYSE in August 1993.", published: true },
-    { slug: "equity-office-properties-trust", name: "Equity Office Properties Trust", kind: "ownership_entity", foundedYear: 1997, headquarters: "Chicago, Illinois", summary: "Office REIT taken public in July 1997 and sold to Blackstone affiliates in February 2007.", published: true },
-    { slug: "equity-lifestyle-properties", name: "Equity LifeStyle Properties", kind: "ownership_entity", headquarters: "Chicago, Illinois", summary: "Manufactured-home community and resort REIT founded by Zell (formerly Manufactured Home Communities).", published: true },
-    { slug: "blackstone", name: "Blackstone", kind: "investment_fund", foundedYear: 1985, headquarters: "New York, New York", summary: "Private equity and real estate manager; funds it manages acquired Equity Office in 2007.", published: true },
-    { slug: "vornado-realty-trust", name: "Vornado Realty Trust", kind: "ownership_entity", headquarters: "New York, New York", summary: "Office REIT that led the competing consortium bid for Equity Office in early 2007.", published: true },
-    { slug: "zell-chilmark-fund", name: "Zell/Chilmark Fund", kind: "investment_fund", foundedYear: 1990, headquarters: "Chicago, Illinois", summary: "Roughly $1 billion distressed-company fund formed with Chilmark Partners.", published: true },
-    { slug: "tribune-company", name: "Tribune Company", kind: "operating_company", headquarters: "Chicago, Illinois", summary: "Media company taken private in 2007 through an employee stock ownership plan structure led by Zell.", published: true },
-    { slug: "equity-international", name: "Equity International", kind: "investment_fund", foundedYear: 1999, headquarters: "Chicago, Illinois", summary: "Emerging-markets real estate investor founded by Zell and Gary Garrabrant.", published: true },
-    { slug: "macklowe-properties", name: "Macklowe Properties", kind: "company", headquarters: "New York, New York", summary: "Harry Macklowe's firm; bought eight Manhattan EOP towers from Blackstone in 2007.", published: true },
-    { slug: "beacon-capital-partners", name: "Beacon Capital Partners", kind: "investment_fund", headquarters: "Boston, Massachusetts", summary: "Bought Equity Office's Washington, D.C. portfolio from Blackstone in April 2007.", published: true },
-    { slug: "greatbanc-trust", name: "GreatBanc Trust Company", kind: "bank", summary: "Trustee of the Tribune employee stock ownership plan.", published: true },
+    { slug: "equity-group-investments", geo: { lat: 41.8819, lng: -87.6278, label: "Chicago, IL" }, name: "Equity Group Investments", kind: "investment_fund", headquarters: "Chicago, Illinois", summary: "Zell's private investment firm; the holding platform for his real estate and corporate investments.", published: true },
+    { slug: "equity-residential", geo: { lat: 41.8819, lng: -87.6278, label: "Chicago, IL" }, name: "Equity Residential", kind: "ownership_entity", foundedYear: 1993, headquarters: "Chicago, Illinois", summary: "Apartment REIT formed in March 1993 to carry on the multifamily business of Zell-controlled entities; listed on the NYSE in August 1993.", published: true },
+    { slug: "equity-office-properties-trust", geo: { lat: 41.8819, lng: -87.6278, label: "Chicago, IL" }, name: "Equity Office Properties Trust", kind: "ownership_entity", foundedYear: 1997, headquarters: "Chicago, Illinois", summary: "Office REIT taken public in July 1997 and sold to Blackstone affiliates in February 2007.", published: true },
+    { slug: "equity-lifestyle-properties", geo: { lat: 41.8819, lng: -87.6278, label: "Chicago, IL" }, name: "Equity LifeStyle Properties", kind: "ownership_entity", headquarters: "Chicago, Illinois", summary: "Manufactured-home community and resort REIT founded by Zell (formerly Manufactured Home Communities).", published: true },
+    { slug: "blackstone", geo: { lat: 40.764, lng: -73.973, label: "New York, NY" }, name: "Blackstone", kind: "investment_fund", foundedYear: 1985, headquarters: "New York, New York", summary: "Private equity and real estate manager; funds it manages acquired Equity Office in 2007.", published: true },
+    { slug: "vornado-realty-trust", geo: { lat: 40.7549, lng: -73.984, label: "New York, NY" }, name: "Vornado Realty Trust", kind: "ownership_entity", headquarters: "New York, New York", summary: "Office REIT that led the competing consortium bid for Equity Office in early 2007.", published: true },
+    { slug: "zell-chilmark-fund", geo: { lat: 41.8819, lng: -87.6278, label: "Chicago, IL" }, name: "Zell/Chilmark Fund", kind: "investment_fund", foundedYear: 1990, headquarters: "Chicago, Illinois", summary: "Roughly $1 billion distressed-company fund formed with Chilmark Partners.", published: true },
+    { slug: "tribune-company", geo: { lat: 41.8819, lng: -87.6278, label: "Chicago, IL" }, name: "Tribune Company", kind: "operating_company", headquarters: "Chicago, Illinois", summary: "Media company taken private in 2007 through an employee stock ownership plan structure led by Zell.", published: true },
+    { slug: "equity-international", geo: { lat: 41.8819, lng: -87.6278, label: "Chicago, IL" }, name: "Equity International", kind: "investment_fund", foundedYear: 1999, headquarters: "Chicago, Illinois", summary: "Emerging-markets real estate investor founded by Zell and Gary Garrabrant.", published: true },
+    { slug: "macklowe-properties", geo: { lat: 40.7614, lng: -73.9776, label: "New York, NY" }, name: "Macklowe Properties", kind: "company", headquarters: "New York, New York", summary: "Harry Macklowe's firm; bought eight Manhattan EOP towers from Blackstone in 2007.", published: true },
+    { slug: "beacon-capital-partners", geo: { lat: 42.3555, lng: -71.0565, label: "Boston, MA" }, name: "Beacon Capital Partners", kind: "investment_fund", headquarters: "Boston, Massachusetts", summary: "Bought Equity Office's Washington, D.C. portfolio from Blackstone in April 2007.", published: true },
+    { slug: "greatbanc-trust", geo: { lat: 41.85, lng: -88.09, label: "Lisle, IL" }, name: "GreatBanc Trust Company", kind: "bank", summary: "Trustee of the Tribune employee stock ownership plan.", published: true },
   ],
 
   claims: [
@@ -478,6 +479,7 @@ The Capital Architecture Lab (Phase 2) will attach an explicitly hypothetical di
       headlineValueUsd: 39_000_000_000,
       headlineValueLabel: "≈ $39 billion including debt ($55.50 per share in cash)",
       headlineValueStatus: "documented",
+      geo: { lat: 41.8819, lng: -87.6278, label: "Chicago, IL (headquarters; portfolio national)" },
       summary: "Zell's Equity Office agreed to be acquired by affiliates of The Blackstone Group. After a competing proposal led by Vornado Realty Trust, the agreement was amended to $55.50 per share in cash, shareholders approved it, and the merger closed on February 9, 2007. It was reported at the time as the largest leveraged buyout in history.",
       rightsAcquired: "Blackstone affiliates acquired 100% of the common equity (merger consideration of $55.50 per share) and assumed or refinanced the company's existing debt. Equity Office shareholders, including Zell-affiliated holders, received cash and surrendered all ownership. The record in this corpus does not break out Zell's personal or EGI holdings at closing.",
       operatingStrategy: "Documented: Blackstone began reselling individual assets and regional portfolios almost immediately, selling roughly $27 billion of property within about five months. Interpretation: the buyer's thesis was price arbitrage between the public portfolio value and the sum of private single-asset values, not long-term ownership.",
