@@ -6,7 +6,7 @@ import { requireUser } from "@/lib/auth/current-user";
 import { can } from "@/lib/auth/roles";
 import { filterGraph, getInstitution, loadNetworkGraph } from "@/lib/data/network";
 import { getClaimsWithSources } from "@/lib/data/research";
-import { bookmarkedIds } from "@/lib/data/workspace";
+import { bookmarkedIds, recordProgress } from "@/lib/data/workspace";
 import { claims } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Card, Eyebrow, PageHeader } from "@/components/ui/primitives";
@@ -26,6 +26,7 @@ export default async function InstitutionPage({ params }: { params: Promise<{ sl
   const r = await getInstitution(db, slug, includeDrafts);
   if (!r) notFound();
   const { institution } = r;
+  await recordProgress(db, user.id, "institution.opened", "institution", institution.id);
   const [graph, instClaims, bookmarks] = await Promise.all([loadNetworkGraph(db, includeDrafts), getClaimsWithSources(db, eq(claims.institutionId, institution.id), includeDrafts), bookmarkedIds(db, user.id, "claim")]);
   const ego = filterGraph(graph, { institution: slug });
   const nodeById = new Map(ego.nodes.map((n) => [n.id, n] as const));

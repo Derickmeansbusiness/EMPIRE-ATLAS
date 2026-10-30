@@ -54,8 +54,13 @@ transaction's stated location). The schematic map draws only nodes with coordina
 - **investment_committee_submissions** (user_id, nine text sections, recommendation, model_id, model_snapshot,
   evaluation jsonb, memo_markdown, score, verdict).
 
-## Planned tables (Phase 5; not yet migrated)
-quizzes, quiz_results, market_data_series (with source + as_of), ritual/program progress.
+## Phase 5 tables (migration 0006)
+`users.membership_tier`, `profiles.program_started_on`, `research_collections.kind` (folder | reading_list),
+`collection_items`, `ritual_entries` (one per user and ritual day per week), `program_progress` (manual task
+completions), `quiz_attempts` (answers and score). All carry `user_id` and RLS owner policies.
+
+## Still planned
+`market_data_series` (with source and as_of), once an authorised data source exists.
 
 ## Enumerations
 user_role, user_status, publish_status, verification_status (verified_primary | supported_secondary | contested |

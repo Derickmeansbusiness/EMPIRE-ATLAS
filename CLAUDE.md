@@ -51,6 +51,9 @@ src/components/network graph (React Flow, client) and schematic geo map
 src/db                client, migrate, schema, migrations/, seed/
 src/finance           core, underwriting, debt, credit, distressed, waterfall, stress
 src/simulation        engine, scenarios/, committee evaluator
+src/quiz              quiz types, grading, bank (numeric answers computed by the finance library)
+src/program           24-week curriculum and task checks
+src/ai                BM25 retrieval and the grounded historian
 src/lib/auth          password (scrypt), tokens (HMAC cookie), roles/capabilities, service, current-user
 src/lib/data          research / workspace / admin / models / cases / network / simulations data access
 src/lib/validation    zod schemas
@@ -128,9 +131,9 @@ In CI images with a pre-installed Chromium, set `PLAYWRIGHT_CHROMIUM_PATH=/path/
 - Secrets live in environment variables; nothing secret is ever shipped to the client bundle.
 - Redirect targets are validated (`safeReturnTo`): same-origin relative paths only.
 
-## Current implementation status (2026-10-28)
+## Current implementation status (2026-10-30)
 
-Phases 0–4 are implemented and tested. See `docs/ROADMAP.md` and `docs/reports/PHASE-{1,2,3,4}-REPORT.md` for
+Phases 0–5 are implemented and tested. See `docs/ROADMAP.md` and `docs/reports/PHASE-{1,2,3,4,5}-REPORT.md` for
 exact scope, test results and pending work.
 Live: public site, auth, command center, Sam Zell dossier (12 divisions, 32 claims, 29 sources, 15 timeline
 events), Equity Office sale reconstruction with attached hypothetical models, evidence viewer with review
@@ -138,7 +141,9 @@ history, notes, bookmarks, roadmap of 15 queued subjects, all seven Capital Arch
 versioned models, the fictional Meridian Court case, the Capital Network Explorer (graph, map, table, filters)
 with institution pages, the Empire Simulator (two scenarios, sealed outcomes, scored debriefs), the Investment
 Committee Chamber (rules-based evaluation and memo), admin (users, claims review, content status, audit).
-Next: Phase 5 (synthesis, doctrine, ritual, program, AI historian, memberships). Planned: everything listed as
+Phase 5 adds synthesis, doctrine export, weekly ritual, the 24-week program, quizzes, competency, library folders and
+reading lists, the AI historian, entitlements, organizations and analytics. Deferred: market comparison, live AI
+verification, payments. Planned: everything listed as
 "planned" in `src/lib/modules.ts`.
 
 Simulation conventions: scenarios are TypeScript modules in `src/simulation/scenarios/` registered in
@@ -154,3 +159,8 @@ without a claim must be `is_hypothetical = true` (database CHECK) and render dot
 Lab conventions: tool inputs live in the URL in UI units (percent as percent); `withSavedModel()` merges a saved
 model's assumptions under URL params; `SaveModelPanel` posts the same UI-unit values so reloads are lossless.
 Finance modules convert to decimals at the call boundary.
+
+Phase 5 conventions: competency and program progress come from stored work, never from viewing time. The historian
+answers only from retrieved evidence, strips citations it was not given, and makes no model call when retrieval is
+empty. Entitlements never gate owners or administrators and are enforced only when `ATLAS_ENFORCE_ENTITLEMENTS` is set.
+Doctrine exports escape all user text.

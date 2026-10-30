@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookMarked, Building2, Clock, FlaskConical, Gavel, LayoutDashboard, Library, Network, ScrollText, Settings, ShieldCheck, Swords, Users, FileSearch } from "lucide-react";
+import { BarChart3, BookMarked, Bot, Building, Building2, Calendar, Clock, FileSearch, FlaskConical, Gavel, GraduationCap, LayoutDashboard, Library, ListChecks, Network, NotebookPen, ScrollText, Settings, ShieldCheck, Swords, Users } from "lucide-react";
 import { Wordmark } from "@/components/ui/brand";
 import { NavLink } from "./nav-link";
 import { signOutAction } from "@/app/actions/auth";
@@ -8,40 +8,53 @@ import { ROLE_LABELS } from "@/lib/auth/roles";
 import { researcherLabel } from "@/lib/format";
 import type { User } from "@/db/schema";
 
-const research = [
-  { href: "/command-center", label: "Command Center", icon: LayoutDashboard },
-  { href: "/dossiers", label: "Empire Dossiers", icon: ScrollText },
-  { href: "/timeline", label: "Historical Timeline", icon: Clock },
-  { href: "/deals", label: "Deal Archaeology", icon: Building2 },
-  { href: "/evidence/sources", label: "Sources & Evidence", icon: FileSearch },
-  { href: "/network", label: "Capital Network", icon: Network },
-  { href: "/lab", label: "Capital Architecture Lab", icon: FlaskConical },
-  { href: "/simulator", label: "Empire Simulator", icon: Swords },
-  { href: "/committee", label: "Investment Committee", icon: Gavel },
-  { href: "/library", label: "Research Library", icon: Library },
+const groups = [
+  { title: "Research", items: [
+    { href: "/command-center", label: "Command Center", icon: LayoutDashboard },
+    { href: "/dossiers", label: "Empire Dossiers", icon: ScrollText },
+    { href: "/timeline", label: "Historical Timeline", icon: Clock },
+    { href: "/deals", label: "Deal Archaeology", icon: Building2 },
+    { href: "/evidence/sources", label: "Sources & Evidence", icon: FileSearch },
+    { href: "/network", label: "Capital Network", icon: Network },
+    { href: "/library", label: "Research Library", icon: Library },
+  ] },
+  { title: "Practice", items: [
+    { href: "/lab", label: "Capital Architecture Lab", icon: FlaskConical },
+    { href: "/simulator", label: "Empire Simulator", icon: Swords },
+    { href: "/committee", label: "Investment Committee", icon: Gavel },
+  ] },
+  { title: "Study", items: [
+    { href: "/synthesis", label: "Strategy Synthesis", icon: NotebookPen },
+    { href: "/doctrine", label: "My Investment Doctrine", icon: BookMarked },
+    { href: "/ritual", label: "Weekly Ritual", icon: Calendar },
+    { href: "/program", label: "Six-Month Program", icon: ListChecks },
+    { href: "/quizzes", label: "Quizzes & Challenges", icon: GraduationCap },
+    { href: "/historian", label: "AI Historian", icon: Bot },
+  ] },
 ];
 
 export function AppShell({ user, children }: { user: User; children: React.ReactNode }) {
   const isAdmin = can(user.role, "admin:access");
   const nav = (
     <nav aria-label="Application" className="flex flex-col gap-6 text-sm">
+      {groups.map((g) => (
+        <div key={g.title}>
+          <p className="eyebrow mb-2 px-2">{g.title}</p>
+          <ul className="space-y-0.5">
+            {g.items.map(({ href, label, icon: Icon }) => (
+              <li key={href}><NavLink href={href}><Icon className="h-4 w-4 shrink-0" aria-hidden="true" /> <span>{label}</span></NavLink></li>
+            ))}
+          </ul>
+        </div>
+      ))}
       <div>
-        <p className="eyebrow mb-2 px-2">Research</p>
-        <ul className="space-y-0.5">
-          {research.map(({ href, label, icon: Icon }) => (
-            <li key={href}><NavLink href={href}><Icon className="h-4 w-4 shrink-0" aria-hidden="true" /> <span>{label}</span></NavLink></li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <p className="eyebrow mb-2 px-2">Later phases</p>
-        <NavLink href="/roadmap" muted><BookMarked className="h-4 w-4" aria-hidden="true" /> Synthesis, Doctrine, Ritual…</NavLink>
+        <NavLink href="/roadmap" muted><BookMarked className="h-4 w-4" aria-hidden="true" /> Platform roadmap</NavLink>
       </div>
       {isAdmin && (
         <div>
           <p className="eyebrow mb-2 px-2">Administration</p>
           <ul className="space-y-0.5">
-            {[{ href: "/admin", label: "Research CMS", icon: ShieldCheck, exact: true }, { href: "/admin/claims", label: "Claims Verification", icon: FileSearch, exact: false }, { href: "/admin/users", label: "User Management", icon: Users, exact: false }].map(({ href, label, icon: Icon, exact }) => (
+            {[{ href: "/admin", label: "Research CMS", icon: ShieldCheck, exact: true }, { href: "/admin/claims", label: "Claims Verification", icon: FileSearch, exact: false }, { href: "/admin/users", label: "User Management", icon: Users, exact: false }, { href: "/admin/organizations", label: "Organizations & Cohorts", icon: Building, exact: false }, { href: "/admin/analytics", label: "Platform Analytics", icon: BarChart3, exact: false }].map(({ href, label, icon: Icon, exact }) => (
               <li key={href}><NavLink href={href} exact={exact}><Icon className="h-4 w-4 shrink-0" aria-hidden="true" /> {label}</NavLink></li>
             ))}
           </ul>

@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
  * active navigation) and redirects anonymous visitors away from private routes early.
  * Authorization is still enforced server-side in layouts and actions; this is a UX shortcut only.
  */
-const PRIVATE_PREFIXES = ["/command-center", "/dossiers", "/timeline", "/deals", "/evidence", "/network", "/lab", "/library", "/profile", "/admin", "/roadmap", "/institutions", "/simulator", "/committee"];
+const PRIVATE_PREFIXES = ["/command-center", "/dossiers", "/timeline", "/deals", "/evidence", "/network", "/lab", "/library", "/profile", "/admin", "/roadmap", "/institutions", "/simulator", "/committee", "/synthesis", "/doctrine", "/ritual", "/program", "/quizzes", "/historian"];
 
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;

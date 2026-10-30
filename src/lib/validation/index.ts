@@ -80,3 +80,25 @@ export const committeeSubmissionSchema = z.object({
   recommendation: z.enum(["approve", "approve_with_conditions", "decline"]),
   modelId: z.string().uuid().optional().nullable(),
 });
+
+// ── Phase 5 ──
+const optionalUuid = z.string().uuid().optional().nullable().or(z.literal("").transform(() => null));
+const optionalText = (max: number) => z.string().trim().max(max).optional().nullable().transform((v) => (v && v.length ? v : null));
+
+export const principleSchema = z.object({
+  id: optionalUuid, title: z.string().trim().min(3, "Name the principle.").max(160), statement: z.string().trim().min(10, "State the principle in a sentence or two.").max(4000),
+  sourceInvestorId: optionalUuid, supportingTransactionId: optionalUuid, supportingClaimId: optionalUuid,
+  relevantRisk: optionalText(2000), modernApplication: optionalText(2000), personalNotes: optionalText(4000),
+});
+
+export const doctrineSchema = z.object(Object.fromEntries(["targetAssets", "geographicStrategy", "acquisitionCriteria", "financingCriteria", "riskTolerance", "capitalPartnerStrategy", "committeeStandards", "exitStrategies"].map((k) => [k, z.string().trim().max(8000).default("")])) as Record<"targetAssets" | "geographicStrategy" | "acquisitionCriteria" | "financingCriteria" | "riskTolerance" | "capitalPartnerStrategy" | "committeeStandards" | "exitStrategies", z.ZodDefault<z.ZodString>>);
+
+export const ritualSchema = z.object({ day: z.coerce.number().int().min(1).max(5), journal: z.string().trim().max(4000).default("") });
+export const taskSchema = z.object({ week: z.coerce.number().int().min(1).max(24), taskKey: z.string().min(1).max(64), done: z.enum(["1", "0"]), note: optionalText(1000) });
+export const collectionSchema = z.object({ name: z.string().trim().min(1, "Name the collection.").max(80), kind: z.enum(["folder", "reading_list"]) });
+export const assignNoteSchema = z.object({ noteId: z.string().uuid(), collectionId: optionalUuid });
+export const readingListItemSchema = z.object({ collectionId: z.string().uuid(), targetKind: linkedKindSchema, targetId: z.string().uuid(), returnTo: z.string().max(512).optional() });
+export const historianSchema = z.object({ question: z.string().trim().min(5, "Ask a fuller question.").max(2000), role: z.enum(["historian", "acquisition_analyst", "credit_underwriter", "capital_structure", "committee_examiner", "research_mentor"]), mode: z.enum(["ask", "search"]).default("search") });
+export const tierSchema = z.object({ userId: z.string().uuid(), tier: z.enum(["explorer", "researcher", "professional", "institutional"]) });
+export const orgSchema = z.object({ name: z.string().trim().min(2, "Name the organization.").max(120) });
+export const orgMemberSchema = z.object({ organizationId: z.string().uuid(), email: emailSchema, roleInOrg: z.enum(["member", "instructor"]).default("member") });

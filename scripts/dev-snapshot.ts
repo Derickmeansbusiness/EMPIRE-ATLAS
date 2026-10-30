@@ -67,7 +67,6 @@ async function main() {
   await page.goto(`${base}/sign-in`); await page.getByLabel("Email").fill(EMAIL); await page.getByLabel("Password").fill(PASSWORD);
   await page.getByRole("button", { name: /enter the archive/i }).click(); await page.waitForURL(/command-center/);
 
-  const fileFor = new Map<string, string>(PAGES.map(([p, n]) => [p.split("?")[0] + (p.includes("?") ? "?" + p.split("?")[1] : ""), `${n}.html`]));
   const byPath = new Map<string, string>(); for (const [p, n] of PAGES) byPath.set(p, `${n}.html`);
   const assets = new Map<string, string>();
   const saveAsset = async (url: string): Promise<string> => {

@@ -9,7 +9,7 @@ import { MODEL_KIND_LABEL, MODEL_KIND_PATH, type ModelKind } from "@/lib/data/mo
 import { toQuery } from "@/lib/lab-params";
 import { Alert, Card, Eyebrow, PageHeader } from "@/components/ui/primitives";
 import { NoteForm } from "@/components/workspace/note-form";
-import { listNotes } from "@/lib/data/workspace";
+import { listNotes, recordProgress } from "@/lib/data/workspace";
 import { formatRelative } from "@/lib/format";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -38,6 +38,7 @@ export default async function CasePage({ params, searchParams }: { params: Promi
   if (!record) notFound();
   const { caseStudy, investor } = record;
   const presets = caseStudy.modelPresets as Record<string, Record<string, string | number>>;
+  await recordProgress(db, user.id, "case.opened", "case_study", caseStudy.id);
   const notes = await listNotes(db, user.id, { linkedKind: "case_study", linkedId: caseStudy.id });
   const returnTo = `/lab/cases/${caseStudy.slug}`;
   return (

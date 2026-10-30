@@ -51,6 +51,7 @@ export const users = pgTable("users", {
   displayName: text("display_name").notNull(),
   role: userRoleEnum("role").notNull().default("student"),
   status: userStatusEnum("status").notNull().default("active"),
+  membershipTier: text("membership_tier").notNull().default("researcher"),
   researcherNumber: integer("researcher_number").unique(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().default(now()),
@@ -63,6 +64,7 @@ export const profiles = pgTable("profiles", {
   bio: text("bio"),
   focusMarkets: text("focus_markets").array().notNull().default(sql`'{}'`),
   competencyLevel: text("competency_level").notNull().default("research_apprentice"),
+  programStartedOn: date("program_started_on"),
   preferences: jsonb("preferences").notNull().default(sql`'{}'::jsonb`),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().default(now()),
 });
@@ -332,8 +334,19 @@ export const researchCollections = pgTable("research_collections", {
   userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   description: text("description"),
+  kind: text("kind").notNull().default("folder"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
 });
+
+export const collectionItems = pgTable("collection_items", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  collectionId: uuid("collection_id").notNull().references(() => researchCollections.id, { onDelete: "cascade" }),
+  targetKind: linkedObjectKindEnum("target_kind").notNull(),
+  targetId: uuid("target_id").notNull(),
+  note: text("note"),
+  position: integer("position").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+}, (t) => [unique().on(t.collectionId, t.targetKind, t.targetId)]);
 
 export const researchNotes = pgTable("research_notes", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -473,6 +486,35 @@ export const investmentCommitteeSubmissions = pgTable("investment_committee_subm
   memoMarkdown: text("memo_markdown").notNull(),
   score: integer("score").notNull(),
   verdict: committeeVerdictEnum("verdict").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+});
+
+export const ritualEntries = pgTable("ritual_entries", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  weekStart: date("week_start").notNull(),
+  day: integer("day").notNull(),
+  journal: text("journal").notNull().default(""),
+  completedAt: timestamp("completed_at", { withTimezone: true }).notNull().default(now()),
+}, (t) => [unique().on(t.userId, t.weekStart, t.day)]);
+
+export const programProgress = pgTable("program_progress", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  week: integer("week").notNull(),
+  taskKey: text("task_key").notNull(),
+  note: text("note"),
+  completedAt: timestamp("completed_at", { withTimezone: true }).notNull().default(now()),
+}, (t) => [unique().on(t.userId, t.week, t.taskKey)]);
+
+export const quizAttempts = pgTable("quiz_attempts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  quizSlug: text("quiz_slug").notNull(),
+  answers: jsonb("answers").notNull(),
+  score: integer("score").notNull(),
+  maxScore: integer("max_score").notNull(),
+  passed: boolean("passed").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
 });
 

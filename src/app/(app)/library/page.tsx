@@ -3,6 +3,9 @@ import Link from "next/link";
 import { getDb } from "@/db/client";
 import { requireUser } from "@/lib/auth/current-user";
 import { listBookmarks, listNotes } from "@/lib/data/workspace";
+import { listCollections } from "@/lib/data/study";
+import { createCollectionAction } from "@/app/actions/study";
+import { Button, Input, Select } from "@/components/ui/primitives";
 import { Alert, Card, EmptyState, Eyebrow, PageHeader } from "@/components/ui/primitives";
 import { NoteForm } from "@/components/workspace/note-form";
 import { formatRelative } from "@/lib/format";
@@ -14,13 +17,13 @@ export default async function LibraryPage({ searchParams }: { searchParams: Prom
   const user = await requireUser();
   const sp = await searchParams;
   const db = await getDb();
-  const [notesAll, bookmarks] = await Promise.all([listNotes(db, user.id), listBookmarks(db, user.id)]);
+  const [notesAll, bookmarks, collections] = await Promise.all([listNotes(db, user.id), listBookmarks(db, user.id), listCollections(db, user.id)]);
   const q = (sp.q ?? "").trim().toLowerCase();
   const notes = q ? notesAll.filter((n) => n.title.toLowerCase().includes(q) || n.body.toLowerCase().includes(q) || n.tags.some((t) => t.toLowerCase().includes(q))) : notesAll;
   const tags = Array.from(new Set(notesAll.flatMap((n) => n.tags))).sort();
   return (
     <>
-      <PageHeader eyebrow="Research Library" title="Notes, bookmarks and evidence cards" description="Private to your account. Notes attached to a claim, investor or transaction stay linked to the evidence." />
+      <PageHeader eyebrow="Research Library" title="Notes, bookmarks and evidence cards" description="Private to your account. Notes attached to a claim, investor or transaction stay linked to the evidence. File notes in folders and gather sources into reading lists." actions={<a href="/library/export" className="rounded-md border border-platinum/25 px-3 py-2 text-xs text-platinum hover:border-gold hover:text-gold">Export notes (Markdown)</a>} />
       {sp.deleted && <div className="mb-6"><Alert tone="success">Note deleted.</Alert></div>}
       {sp.saved && <div className="mb-6"><Alert tone="success">Note saved.</Alert></div>}
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
@@ -49,6 +52,15 @@ export default async function LibraryPage({ searchParams }: { searchParams: Prom
         </div>
         <aside className="space-y-6">
           <Card><Eyebrow className="mb-3">New note</Eyebrow><NoteForm /></Card>
+          <Card>
+            <Eyebrow className="mb-3">Folders &amp; reading lists · {collections.length}</Eyebrow>
+            {collections.length > 0 && <ul className="mb-4 space-y-1.5 text-sm">{collections.map((c) => <li key={c.id}><Link href={`/library/collections/${c.id}`} className="text-ivory hover:text-gold">{c.name}</Link> <span className="text-xs text-slate-mist">· {c.kind === "folder" ? "folder" : "reading list"}</span></li>)}</ul>}
+            <form action={createCollectionAction} className="space-y-2">
+              <label htmlFor="col-name" className="sr-only">Collection name</label><Input id="col-name" name="name" required maxLength={80} placeholder="e.g. Zell: distressed" />
+              <label htmlFor="col-kind" className="sr-only">Kind</label><Select id="col-kind" name="kind" defaultValue="folder"><option value="folder">Folder for notes</option><option value="reading_list">Reading list for evidence</option></Select>
+              <Button type="submit" variant="secondary" className="w-full">Create</Button>
+            </form>
+          </Card>
           <Card>
             <Eyebrow className="mb-3">Bookmarks · {bookmarks.length}</Eyebrow>
             {bookmarks.length === 0 ? <p className="text-sm text-slate-mist">Bookmark a claim from any dossier to collect evidence cards here.</p> : (

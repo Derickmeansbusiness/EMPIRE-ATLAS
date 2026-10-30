@@ -3,7 +3,8 @@ import { getDb } from "@/db/client";
 import { requireCapability } from "@/lib/auth/current-user";
 import { listUsers } from "@/lib/data/admin";
 import { ROLE_LABELS, canAssignRole } from "@/lib/auth/roles";
-import { setUserRoleAction, setUserStatusAction } from "@/app/actions/admin";
+import { setTierAction, setUserRoleAction, setUserStatusAction } from "@/app/actions/admin";
+import { TIERS } from "@/lib/entitlements";
 import { Alert, Card, PageHeader, Select } from "@/components/ui/primitives";
 import { formatRelative, researcherLabel } from "@/lib/format";
 import type { UserRole } from "@/db/schema";
@@ -23,7 +24,7 @@ export default async function AdminUsers({ searchParams }: { searchParams: Promi
       {sp.error && <div className="mb-5"><Alert tone="error">{sp.error === "forbidden" ? "You are not allowed to assign that role or change that user." : sp.error === "self" ? "You cannot change your own role." : "Invalid request."}</Alert></div>}
       <Card className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="text-left text-[0.65rem] uppercase tracking-[0.16em] text-slate-mist"><tr><th className="p-2 font-medium">User</th><th className="p-2 font-medium">Role</th><th className="p-2 font-medium">Status</th><th className="p-2 font-medium">Last sign-in</th><th className="p-2 font-medium">Change role</th><th className="p-2 font-medium">Access</th></tr></thead>
+          <thead className="text-left text-[0.65rem] uppercase tracking-[0.16em] text-slate-mist"><tr><th className="p-2 font-medium">User</th><th className="p-2 font-medium">Role</th><th className="p-2 font-medium">Status</th><th className="p-2 font-medium">Last sign-in</th><th className="p-2 font-medium">Change role</th><th className="p-2 font-medium">Tier</th><th className="p-2 font-medium">Access</th></tr></thead>
           <tbody>
             {users.map((u) => {
               const editable = u.id !== actor.id && canAssignRole(actor.role, u.role);
@@ -42,6 +43,7 @@ export default async function AdminUsers({ searchParams }: { searchParams: Promi
                       </form>
                     ) : <span className="text-xs text-slate-mist">{u.id === actor.id ? "you" : "protected"}</span>}
                   </td>
+                  <td className="p-2"><form action={setTierAction} className="flex gap-1.5"><input type="hidden" name="userId" value={u.id} /><Select name="tier" defaultValue={u.membershipTier} aria-label={`Membership tier for ${u.displayName}`} className="py-1.5 text-xs">{TIERS.map((t) => <option key={t.key} value={t.key}>{t.label}</option>)}</Select><button type="submit" className="rounded-md border border-platinum/25 px-2 text-xs text-platinum hover:border-gold hover:text-gold">Set</button></form></td>
                   <td className="p-2">
                     {editable && (
                       <form action={setUserStatusAction}><input type="hidden" name="userId" value={u.id} /><input type="hidden" name="status" value={u.status === "active" ? "suspended" : "active"} /><button type="submit" className={`rounded-md border px-2 py-1 text-xs ${u.status === "active" ? "border-risk/50 text-risk hover:bg-risk/10" : "border-positive/50 text-positive hover:bg-positive/10"}`}>{u.status === "active" ? "Suspend" : "Reactivate"}</button></form>

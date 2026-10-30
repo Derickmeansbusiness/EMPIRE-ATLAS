@@ -49,12 +49,22 @@ generated memo. Migration 0005.
 Deferred: a scenario editor in the admin UI (scenarios are TypeScript modules); more scenarios (land acquisition
 before expansion, subsidised housing finance, sale-leaseback design, portfolio refinancing, rate shock, build vs. debt vs. buy).
 
-## Phase 5 — Complete research experience — Next
-Rich-text notes, folders, reading lists, exports; strategy synthesis and doctrine (exportable document);
-weekly ritual tracking and reminders; six-month program; quizzes and competency progression; AI Investment
-Historian with retrieval over the approved corpus (server-side key, explicit unconfigured state); membership
-entitlements and institutional features; analytics; Supabase Auth/Storage adapters; market comparison module with
-sourced, dated data.
+## Phase 5 — Complete research experience — Implemented
+Strategy synthesis (principles tied to investor, transaction and claim, plus a strategy comparison page), an
+eight-section investment doctrine with printable HTML and Markdown export, the weekly ritual with journal and
+streaks, a 24-week program whose tasks complete from stored work, four quizzes (one numeric, graded against the
+finance library), competency levels and achievements derived from completed work, library folders, reading lists
+and notes export, an AI Investment Historian (BM25 retrieval over the approved corpus, citation validation,
+explicit unconfigured state, daily limit), membership tiers with entitlements (enforcement off by default),
+organizations and cohorts, and platform analytics. Migration 0006.
+
+Deferred, on purpose:
+- Market comparison module. No authorised, dated data source exists yet and the platform does not show unsourced figures.
+- Live verification of the AI path. It is unit-tested against a mocked HTTP layer only; it has not run against a real key.
+- Payments and tier pricing. Tiers exist and entitlements are tested, but enforcement stays off until pricing is decided.
+- Rich-text note editing, PDF and .docx export (print-to-PDF works from the HTML export).
+- Institution-to-institution comparison, which needs more than one published dossier.
+- Supabase Auth/Storage adapters.
 
 ## Research roadmap (after Zell)
 1. Stephen Ross 2. Donald Bren 3. Ray Kroc & Harry Sonneborn 4. Arnold Schwarzenegger 5. John Jacob Astor
