@@ -102,3 +102,43 @@ export const historianSchema = z.object({ question: z.string().trim().min(5, "As
 export const tierSchema = z.object({ userId: z.string().uuid(), tier: z.enum(["explorer", "researcher", "professional", "institutional"]) });
 export const orgSchema = z.object({ name: z.string().trim().min(2, "Name the organization.").max(120) });
 export const orgMemberSchema = z.object({ organizationId: z.string().uuid(), email: emailSchema, roleInOrg: z.enum(["member", "instructor"]).default("member") });
+
+// ── The Investor's Fieldbook ──
+const optText = (max: number) => z.string().trim().max(max).optional().transform((s) => (s ? s : null));
+const moneyField = z.string().trim().optional().transform((s, ctx) => {
+  if (!s) return null; const n = Number(s.replace(/[$,\s]/g, ""));
+  if (!Number.isFinite(n) || n < 0 || n > 1_000_000_000) { ctx.addIssue({ code: "custom", message: "Enter a dollar amount of zero or more." }); return z.NEVER; }
+  return n;
+});
+
+export const passageSchema = z.object({
+  sourceTitle: z.string().trim().min(2, "Give the source a title.").max(240), author: z.string().trim().min(2, "Name the author.").max(160),
+  sourceKind: z.enum(["book", "interview", "letter", "lecture", "article", "filing", "other"]),
+  publishedLabel: optText(60), edition: optText(120), location: optText(120),
+  sourceUrl: z.string().trim().max(500).optional().transform((s) => (s ? s : null)).refine((s) => s == null || /^https?:\/\//i.test(s), "Links must start with http:// or https://"),
+  excerpt: z.string().trim().max(1500, "Keep the excerpt to 1,500 characters. Quote only what you need.").optional().transform((s) => (s ? s : null)),
+  userNotes: optText(8000), isFirstPerson: z.string().optional().transform((s) => s === "1"),
+});
+
+export const findingSchema = z.object({
+  id: z.string().uuid().optional(), sessionId: z.string().uuid(), itemKey: optText(80),
+  locationLabel: z.string().trim().min(2, "Say where you saw it (building, room or area).").max(160),
+  component: z.string().trim().min(1).max(40),
+  description: z.string().trim().min(5, "Describe what you observed.").max(3000),
+  condition: z.enum(["good", "fair", "poor", "unknown"]),
+  severity: z.enum(["information_only", "minor_maintenance", "material_repair", "major_capital_replacement", "potential_safety_issue", "specialist_investigation_required"]),
+  confidence: z.enum(["low", "medium", "high"]),
+  financialImpact: optText(1000), specialistNeeded: optText(200),
+  followUpStatus: z.enum(["open", "in_progress", "resolved", "wont_fix"]).optional(),
+  costLow: moneyField, costHigh: moneyField, costSource: optText(300), resolution: optText(2000),
+}).superRefine((v, ctx) => {
+  if ((v.costLow == null) !== (v.costHigh == null)) ctx.addIssue({ code: "custom", path: ["costHigh"], message: "Give both a low and a high cost, or neither." });
+  if (v.costLow != null && v.costHigh != null && v.costHigh < v.costLow) ctx.addIssue({ code: "custom", path: ["costHigh"], message: "The high estimate must be at least the low estimate." });
+  if (v.costLow != null && !v.costSource) ctx.addIssue({ code: "custom", path: ["costSource"], message: "Say where the cost estimate comes from (own estimate, contractor quote, published guide)." });
+});
+
+export const reportSchema = z.object({
+  propertySlug: z.string().min(1).max(120), sessionId: z.string().uuid(),
+  decision: z.enum(["acquire", "negotiate", "investigate", "reject"]),
+  rationale: z.string().trim().min(20, "Give your reasons in at least a sentence or two.").max(4000),
+});

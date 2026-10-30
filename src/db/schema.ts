@@ -533,3 +533,178 @@ export type FinancialModel = typeof financialModels.$inferSelect;
 export type CaseStudy = typeof caseStudies.$inferSelect;
 export type SimulationAttempt = typeof simulationAttempts.$inferSelect;
 export type CommitteeSubmissionRow = typeof investmentCommitteeSubmissions.$inferSelect;
+
+// ── The Investor's Fieldbook (migration 0007) ──
+export const sourcePassages = pgTable("source_passages", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+  slug: text("slug").unique(),
+  sourceTitle: text("source_title").notNull(),
+  author: text("author").notNull(),
+  sourceKind: text("source_kind").notNull().default("book"),
+  publishedLabel: text("published_label"),
+  edition: text("edition"),
+  location: text("location"),
+  sourceUrl: text("source_url"),
+  excerpt: text("excerpt"),
+  isFirstPerson: boolean("is_first_person").notNull().default(true),
+  investorId: uuid("investor_id").references(() => investors.id, { onDelete: "set null" }),
+  userNotes: text("user_notes"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().default(now()),
+});
+
+export const quoteAnalyses = pgTable("quote_analyses", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  passageId: uuid("passage_id").notNull().references(() => sourcePassages.id, { onDelete: "cascade" }),
+  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+  aiAssisted: boolean("ai_assisted").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+});
+
+export type EvidenceClass = "direct_source_claim" | "verified_supporting_fact" | "analytical_interpretation" | "unsupported_conclusion" | "hypothetical_application";
+export const analysisStatements = pgTable("analysis_statements", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  analysisId: uuid("analysis_id").notNull().references(() => quoteAnalyses.id, { onDelete: "cascade" }),
+  dimension: integer("dimension").notNull(),
+  body: text("body").notNull(),
+  evidenceClass: text("evidence_class").$type<EvidenceClass>().notNull(),
+  position: integer("position").notNull().default(0),
+});
+
+export const practiceExercises = pgTable("practice_exercises", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  slug: text("slug").notNull().unique(),
+  passageId: uuid("passage_id").references(() => sourcePassages.id, { onDelete: "cascade" }),
+  historicalBehavior: text("historical_behavior").notNull(),
+  skillKey: text("skill_key").notNull(),
+  skillLabel: text("skill_label").notNull(),
+  modernExercise: text("modern_exercise").notNull(),
+  launchHref: text("launch_href"),
+  position: integer("position").notNull().default(0),
+});
+
+export type AssetClass = "multifamily" | "single_family_rental" | "industrial" | "retail" | "office" | "hospitality" | "mixed_use";
+export const properties = pgTable("properties", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  assetClass: text("asset_class").$type<AssetClass>().notNull(),
+  units: integer("units"),
+  yearBuilt: integer("year_built"),
+  locationLabel: text("location_label"),
+  isFictional: boolean("is_fictional").notNull().default(false),
+  summary: text("summary"),
+  challengeSlug: text("challenge_slug"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+});
+
+export const inspectionSessions = pgTable("inspection_sessions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  propertyId: uuid("property_id").notNull().references(() => properties.id, { onDelete: "cascade" }),
+  templateSlug: text("template_slug").notNull(),
+  status: text("status").$type<"draft" | "completed">().notNull().default("draft"),
+  startedAt: timestamp("started_at", { withTimezone: true }).notNull().default(now()),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  location: jsonb("location").$type<{ lat: number; lng: number; accuracy: number | null; capturedAt: string } | null>(),
+  summaryNote: text("summary_note"),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().default(now()),
+});
+
+export type ItemRating = "good" | "fair" | "poor" | "not_observed";
+export const inspectionItems = pgTable("inspection_items", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  sessionId: uuid("session_id").notNull().references(() => inspectionSessions.id, { onDelete: "cascade" }),
+  itemKey: text("item_key").notNull(),
+  rating: text("rating").$type<ItemRating>().notNull(),
+  note: text("note"),
+  observedAt: timestamp("observed_at", { withTimezone: true }).notNull().default(now()),
+}, (t) => [unique().on(t.sessionId, t.itemKey)]);
+
+export type Severity = "information_only" | "minor_maintenance" | "material_repair" | "major_capital_replacement" | "potential_safety_issue" | "specialist_investigation_required";
+export const findings = pgTable("findings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  sessionId: uuid("session_id").notNull().references(() => inspectionSessions.id, { onDelete: "cascade" }),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  itemKey: text("item_key"),
+  locationLabel: text("location_label").notNull(),
+  component: text("component").notNull(),
+  description: text("description").notNull(),
+  condition: text("condition").$type<"good" | "fair" | "poor" | "unknown">().notNull().default("unknown"),
+  severity: text("severity").$type<Severity>().notNull(),
+  confidence: text("confidence").$type<"low" | "medium" | "high">().notNull().default("medium"),
+  financialImpact: text("financial_impact"),
+  specialistNeeded: text("specialist_needed"),
+  followUpStatus: text("follow_up_status").$type<"open" | "in_progress" | "resolved" | "wont_fix">().notNull().default("open"),
+  costLow: numeric("cost_low", { precision: 14, scale: 2 }),
+  costHigh: numeric("cost_high", { precision: 14, scale: 2 }),
+  costSource: text("cost_source"),
+  resolution: text("resolution"),
+  observedAt: timestamp("observed_at", { withTimezone: true }).notNull().default(now()),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().default(now()),
+});
+
+export const findingRevisions = pgTable("finding_revisions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  findingId: uuid("finding_id").notNull().references(() => findings.id, { onDelete: "cascade" }),
+  snapshot: jsonb("snapshot").notNull(),
+  revisedAt: timestamp("revised_at", { withTimezone: true }).notNull().default(now()),
+});
+
+export const inspectionMedia = pgTable("inspection_media", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  sessionId: uuid("session_id").notNull().references(() => inspectionSessions.id, { onDelete: "cascade" }),
+  findingId: uuid("finding_id").references(() => findings.id, { onDelete: "set null" }),
+  contentType: text("content_type").notNull(),
+  byteSize: integer("byte_size").notNull(),
+  dataBase64: text("data_base64").notNull(),
+  caption: text("caption"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+});
+
+export const followUpActions = pgTable("follow_up_actions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  sessionId: uuid("session_id").notNull().references(() => inspectionSessions.id, { onDelete: "cascade" }),
+  findingId: uuid("finding_id").references(() => findings.id, { onDelete: "set null" }),
+  title: text("title").notNull(),
+  dueOn: date("due_on"),
+  status: text("status").$type<"open" | "done">().notNull().default("open"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+});
+
+export const challengeAttempts = pgTable("challenge_attempts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  challengeSlug: text("challenge_slug").notNull(),
+  answers: jsonb("answers").notNull(),
+  result: jsonb("result").notNull(),
+  score: integer("score").notNull(),
+  maxScore: integer("max_score").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+});
+
+export const fieldbookReports = pgTable("fieldbook_reports", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  propertyId: uuid("property_id").notNull().references(() => properties.id, { onDelete: "cascade" }),
+  sessionId: uuid("session_id").references(() => inspectionSessions.id, { onDelete: "set null" }),
+  attemptId: uuid("attempt_id").references(() => challengeAttempts.id, { onDelete: "set null" }),
+  title: text("title").notNull(),
+  snapshot: jsonb("snapshot").notNull(),
+  markdown: text("markdown").notNull(),
+  noteId: uuid("note_id").references(() => researchNotes.id, { onDelete: "set null" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(now()),
+});
+
+export type SourcePassage = typeof sourcePassages.$inferSelect;
+export type Property = typeof properties.$inferSelect;
+export type InspectionSession = typeof inspectionSessions.$inferSelect;
+export type Finding = typeof findings.$inferSelect;
+export type ChallengeAttempt = typeof challengeAttempts.$inferSelect;
+export type FieldbookReport = typeof fieldbookReports.$inferSelect;

@@ -1,0 +1,45 @@
+/**
+ * Staged walk notes for fictional properties: what a visitor would see at each checklist item. Invented for training.
+ * No photographs are shown or implied; users may attach their own images to practise the upload workflow.
+ */
+export const FIELD_EVIDENCE: Record<string, Record<string, string>> = {
+  "linden-court-apartments": {
+    "market.demand": "Two of the five neighbouring apartment communities show “now leasing” banners. A small grocery-anchored centre across the road is fully occupied.",
+    "market.competition": "A newer 2010s community half a mile away advertises rents roughly in line with Linden Court’s market rents on its banner. You did not see its interiors.",
+    "access.entry": "One entrance from a two-lane road, no turn lane. Exiting left at the evening peak looks slow.",
+    "access.transit": "A bus stop sits at the corner of the road, about a four-minute walk from the leasing office.",
+    "site.grading": "Water staining and a shallow depression collect near the southwest corner of Building C. The downspout there discharges onto the pavement.",
+    "site.drains": "One storm inlet in the lot is partly covered with leaves and debris.",
+    "parking.surface": "Fresh black sealcoat and new striping cover most of the lot. Through the sealcoat, a network of interconnected cracks (the “alligator” pattern) is visible across the main drive aisle and in front of Building B. Several patched areas show through. Water is ponding by the dumpster.",
+    "parking.lighting": "Three pole fixtures are present. You visited in daylight, so you cannot say whether they work; one fixture near Building A has a cracked lens.",
+    "parking.waste": "The dumpster enclosure gate hangs from one hinge. Bags are stacked outside the overflowing bin.",
+    "exterior.balconies": "Second-floor wood balconies on Building B show peeling paint and darkened, soft-looking boards at the base of two posts. The staff member says “those get painted every few years.”",
+    "exterior.walls": "Wood siding at the base of Building C shows patches of rot where the downspout splash lands.",
+    "roof.visible": "From the ground the roofs look like older asphalt shingles with darker streaks and some patched sections. You cannot see the roof surface itself.",
+    "roof.interior": "In the top-floor corridor of Building A, a ceiling tile has a brown ring and the paint above a door is bubbled.",
+    "roof.age": "The leasing agent says the roofs are “fairly new.” Nothing was offered to support this and the agent does not know the date.",
+    "mep.hvac": "Through-wall and split units are visible on the exterior; several condensers are rusted at the base.",
+    "mep.water": "A staff-opened utility closet in Building A shows a water heater with a rusted base and a pan with water staining. The staff say “we replace them when they go.”",
+    "mep.metering": "Water and sewer appear to be owner-paid with no sub-meters visible. Gas for heat and hot water is in the owner’s name according to staff.",
+    "common.halls": "Stairwell treads in Building B are worn; carpet in the second-floor corridor is stained and lifting at one seam.",
+    "common.amenities": "The advertised fitness room is locked; staff say the key is missing. The laundry room has four machines, one out of order.",
+    "ops.turnover": "Staff say six units are vacant. Two have doors taped shut with a note reading “do not enter”. Staff say these are “almost ready”.",
+    "ops.vendors": "The maintenance shop is small and tidy. The maintenance lead says the owner buys parts and contractors invoice the owner directly; a binder of invoices was not offered.",
+    "unit.occupied": "In one occupied two-bedroom (shown with the resident’s permission), the kitchen and bath look original to 1987: laminate counters, older cabinets and a worn tub surround. The resident mentions a slow recurring drain.",
+    "unit.vacant": "A vacant one-bedroom has patched drywall, bare subfloor in the kitchen and a missing range. Staff estimate about three weeks to turn it.",
+    "unit.offline": "The two taped-shut units may be offline for water damage. One has a visible stain on the hallway ceiling below the unit above it. You were not allowed inside.",
+    "safety.rails": "A section of stair guardrail on Building B’s east stair moves noticeably when pushed.",
+    "safety.alarms": "Extinguisher tags in the corridors are legible but you saw one dated two years earlier.",
+    "safety.egress": "A bicycle and two boxes block part of the first-floor corridor in Building A.",
+    "access.route": "The accessible route from the lot to the leasing office has a lip at the threshold; no marked accessible space was visible in front of Building C.",
+    "env.moisture": "A musty odour in the first-floor corridor of Building C near the area where water collects outside.",
+    "env.insurance": "Wood balconies, an older roof and older water heaters are the sort of features an insurer will ask about.",
+    "tenant.presentation": "The office is clean and the agent courteous. Two residents mention slow responses to maintenance requests; one mentions a long wait for a drain repair.",
+    "tenant.policies": "The agent says concessions are rare and that leases are twelve months. They declined to say how many residents are behind on rent.",
+    "deferred.visible": "Peeling paint on balconies, rusted condensers, rotted siding at the base of Building C, lifting corridor carpet, a loose guardrail and the lot’s cracked base are all visible.",
+    "deferred.reported": "The seller’s summary reports only $19,000 of recurring repairs for the year apart from the lot work. Compare that with the list above.",
+    "value.interiors": "Most interiors appear original. One renovated unit with plank flooring and new cabinets is used as the model; the agent says it rents about $150 more but gives no lease.",
+    "value.operations": "No utility billing back to residents is visible. Parking is unreserved and free.",
+  },
+};
+export const evidenceFor = (propertySlug: string, itemKey: string): string | null => FIELD_EVIDENCE[propertySlug]?.[itemKey] ?? null;

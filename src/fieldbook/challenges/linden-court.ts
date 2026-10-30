@@ -1,0 +1,87 @@
+/**
+ * Fictional case. Linden Court Apartments does not exist; every figure is invented for training and internally
+ * consistent (verified in tests/unit/fieldbook-statement.test.ts against an independent Python calculation).
+ */
+import type { ChallengeCase } from "./types";
+
+export const lindenCourt: ChallengeCase = {
+  slug: "linden-court-t12",
+  title: "Linden Court: the seller’s trailing-12",
+  subtitle: "A 64-unit garden community priced on a self-managed operating statement.",
+  difficulty: "foundation",
+  propertySlug: "linden-court-apartments",
+  skillKey: "operating-statement-analysis",
+  property: {
+    name: "Linden Court Apartments", assetClass: "multifamily", units: 64, yearBuilt: 1987, locationLabel: "Fictional mid-sized Midwestern city",
+    summary: "Three two-storey garden buildings and a surface lot, built in 1987. Owner-managed by the seller’s family. The broker is marketing it at a stated cap rate on the seller’s trailing-12 NOI.",
+  },
+  askingPrice: 6_800_000,
+  lines: [
+    { key: "gpr", label: "Gross potential rent (in-place rents, all 64 units)", section: "gpr", amount: 871_680 },
+    { key: "vacancy", label: "Vacancy loss", section: "deduction", amount: 34_900, note: "Seller states 4.0% average." },
+    { key: "concessions", label: "Concessions", section: "deduction", amount: 6_400 },
+    { key: "creditLoss", label: "Credit loss / bad debt", section: "deduction", amount: 9_000 },
+    { key: "otherIncome", label: "Other income (laundry, fees, pet rent)", section: "other_income", amount: 41_600 },
+    { key: "payroll", label: "Payroll (on-site staff)", section: "expense", amount: 96_000 },
+    { key: "utilities", label: "Utilities", section: "expense", amount: 58_800 },
+    { key: "insurance", label: "Insurance", section: "expense", amount: 41_600 },
+    { key: "taxes", label: "Real estate taxes", section: "expense", amount: 58_000, note: "Current assessment." },
+    { key: "management", label: "Management fee", section: "expense", amount: 0, note: "Self-managed by seller; no fee booked." },
+    { key: "repairs", label: "Repairs and maintenance", section: "expense", amount: 61_000 },
+    { key: "contract", label: "Contract services (landscape, snow, trash)", section: "expense", amount: 31_200 },
+    { key: "admin", label: "Marketing and administrative", section: "expense", amount: 23_400 },
+    { key: "reserves", label: "Replacement reserves", section: "reserve", amount: 0, note: "None reported." },
+  ],
+  rentRoll: [
+    { unitType: "1 bed / 1 bath", count: 24, vacant: 2, inPlaceRent: 985, marketRent: 1_040 },
+    { unitType: "2 bed / 1 bath", count: 32, vacant: 3, inPlaceRent: 1_185, marketRent: 1_240 },
+    { unitType: "3 bed / 2 bath", count: 8, vacant: 1, inPlaceRent: 1_385, marketRent: 1_450 },
+  ],
+  delinquency: { asOf: "Most recent month-end", over30: 31_800, over60: 14_200 },
+  records: [
+    { period: "Spring, last year", description: "Parking lot sealcoat and restriping", amount: 42_000, bookedAs: "Repairs and maintenance" },
+    { period: "Trailing 12 months", description: "All other repairs, turnover supplies and contractor calls", amount: 19_000, bookedAs: "Repairs and maintenance" },
+  ],
+  taxInfo: { assessedValue: 5_000_000, effectiveRate: 0.0116, note: "Training assumption: the jurisdiction reassesses at sale price, so post-sale taxes are price × effective rate." },
+  insuranceNote: "No current insurance quote or loss run was provided.",
+  sellerNotes: [
+    "“Rents are in place and the building is stable. The seller self-manages, so a professional operator can add value.”",
+    "“The parking lot was just redone.”",
+    "No capital expenditure history was provided. No replacement reserve is shown.",
+  ],
+  debt: { ltv: 0.65, annualRate: 0.0675, amortizationYears: 30, termYears: 10, minDscr: 1.25, minDebtYield: 0.09 },
+  marketCapRate: 0.0725,
+  conventions: { managementFeeRate: 0.04, repairsPerUnit: 650, reservesPerUnit: 250 },
+  anomalies: [
+    { id: "management_missing", label: "No management fee is booked", expected: true, explanation: "Self-management is a choice, not a cost saving a buyer keeps. A buyer pays for management, or for their own time. Underwrite a fee (this course uses 4.0% of EGI as an illustrative convention)." },
+    { id: "repairs_low", label: "Recurring repairs and maintenance are unusually low per unit", expected: true, explanation: "After removing the $42,000 pavement project, recurring repairs are $19,000, or about $297 per unit on a 1987 property. This course normalises to $650 per unit as an illustrative floor; it is not market data." },
+    { id: "capex_in_opex", label: "A one-time project is booked as an operating expense", expected: true, explanation: "The $42,000 sealcoat and restriping is a one-time item. It does not belong in recurring expenses and must not be subtracted from recurring NOI, but it still has to be tracked as capital history." },
+    { id: "tax_reassessment", label: "Property taxes reflect the seller’s assessment, not a post-sale reassessment", expected: true, explanation: "At the assumed effective rate, taxes on the asking price are 1.16% × $6,800,000 = $78,880 against $58,000 reported." },
+    { id: "vacancy_understated", label: "Reported vacancy loss is lower than the rent roll shows", expected: true, explanation: "Six units are vacant. Their annual in-place rent is $82,920, against $34,900 of reported vacancy loss. A snapshot is not an average, so ask for monthly occupancy history before concluding anything further." },
+    { id: "credit_loss_understated", label: "Credit loss is lower than the delinquency report suggests", expected: true, explanation: "$14,200 is more than 60 days past due, against $9,000 reported credit loss. This course uses the larger figure as a conservative base case." },
+    { id: "reserves_missing", label: "No replacement reserve is shown", expected: true, explanation: "A buyer will need to replace roofs, appliances and flooring. This course uses $250 per unit per year as an illustrative reserve." },
+    { id: "payroll_excessive", label: "Payroll is excessive", expected: false, explanation: "Payroll is $1,500 per unit. Nothing provided supports calling it excessive. Ask what staff the figure covers instead of assuming." },
+    { id: "utilities_inefficient", label: "Utilities are inefficient", expected: false, explanation: "No usage or billing data was provided, so efficiency cannot be judged. Request utility bills and metering details." },
+    { id: "insurance_understated", label: "Insurance is understated", expected: false, explanation: "There is no quote or loss run to compare against. This is missing information, not a demonstrated anomaly; ask for a quote." },
+    { id: "gpr_overstated", label: "Gross potential rent does not reconcile to the rent roll", expected: false, explanation: "24 × $985 + 32 × $1,185 + 8 × $1,385 = $72,640 a month, or $871,680 a year. It reconciles exactly." },
+    { id: "rent_growth_unsupported", label: "The pro forma assumes unsupported rent growth", expected: false, explanation: "No pro forma was provided. Do not invent a problem the documents do not show." },
+  ],
+  topics: [
+    { id: "taxes", label: "Property tax reassessment", pattern: "tax|assess", sample: "How will property taxes be reassessed on a sale at the asking price?" },
+    { id: "insurance", label: "Insurance quote and loss history", pattern: "insur|premium|loss run|quote", sample: "Can you share a current insurance quote and five-year loss runs?" },
+    { id: "repairs", label: "Repair invoices and general ledger detail", pattern: "invoice|general ledger|\\bgl\\b|vendor|scope|sealcoat|seal coat|resurfac|pavement|parking lot|ledger", sample: "Please send invoices and scope for the parking-lot work, and the repairs ledger detail." },
+    { id: "delinquency", label: "Delinquency and collections history", pattern: "delinquen|aging|collection|bad debt|past due|write.?off", sample: "What is the 12-month collections history and aging of delinquent balances?" },
+    { id: "occupancy", label: "Monthly occupancy and down units", pattern: "occupancy|vacan|down unit|offline|monthly", sample: "What was occupancy month by month, and are any units offline?" },
+    { id: "management", label: "Management and staffing costs", pattern: "manag|self.?manag|owner.?manag|staff|payroll", sample: "What does the seller’s family do on-site, and what would third-party management cost?" },
+    { id: "other_income", label: "Support for other income", pattern: "other income|laundry|fee income|pet|utility reimburse|rubs|fees", sample: "What documents support the $41,600 of other income?" },
+    { id: "capital", label: "Capital history, roof and reserves", pattern: "roof|capital|capex|deferred|reserve|replacement|property condition", sample: "What capital work has been done in the last ten years, and what is the roof age?" },
+  ],
+  adjustmentRules: [
+    { lineKey: "management", label: "Management fee", min: 24_000, max: 42_000, basisPattern: "manag|fee|third.?party|egi|4", expectation: "Roughly 3–5% of effective gross income." },
+    { lineKey: "repairs", label: "Repairs and maintenance", min: 30_000, max: 52_000, basisPattern: "per unit|/unit|one.?time|capex|capital|sealcoat|reclass|floor|normal", expectation: "Remove the one-time project, then bring recurring repairs to a defensible per-unit level." },
+    { lineKey: "taxes", label: "Real estate taxes", min: 75_000, max: 82_000, basisPattern: "reassess|price|effective rate|assess", expectation: "Reassess at the purchase price." },
+    { lineKey: "vacancy", label: "Vacancy loss", min: 70_000, max: 95_000, basisPattern: "rent roll|vacant|occupan|units", expectation: "Reflect the six vacant units in the rent roll." },
+    { lineKey: "creditLoss", label: "Credit loss", min: 12_000, max: 40_000, basisPattern: "delinquen|aging|60|past due|collection", expectation: "Reflect the delinquency report." },
+    { lineKey: "reserves", label: "Replacement reserves", min: 12_000, max: 24_000, basisPattern: "reserve|per unit|/unit|replacement|capital", expectation: "A per-unit annual reserve below NOI." },
+  ],
+};

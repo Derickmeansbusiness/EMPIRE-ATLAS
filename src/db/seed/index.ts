@@ -10,6 +10,7 @@ import {
 import { zellDossier } from "./zell";
 import { roadmapInstitutions, roadmapInvestors } from "./roadmap";
 import { seedCases } from "./cases";
+import { seedFieldbook } from "./fieldbook";
 import type { SeedInvestorDossier } from "./types";
 import { createUser, setUserRole } from "@/lib/auth/service";
 
@@ -196,6 +197,7 @@ export async function seedResearch(db: AtlasDb): Promise<{ investors: number; cl
     await db.insert(caseStudies).values(values).onConflictDoUpdate({ target: caseStudies.slug, set: { ...values, updatedAt: new Date() } });
   }
 
+  await seedFieldbook(db);
   return { investors: dossiers.length + roadmapInvestors.length, claims: claimCount, sources: sourceCount, transactions: txCount, cases: seedCases.length };
 }
 

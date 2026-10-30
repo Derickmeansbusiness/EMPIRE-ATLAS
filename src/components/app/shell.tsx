@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BarChart3, BookMarked, Bot, Building, Building2, Calendar, Clock, FileSearch, FlaskConical, Gavel, GraduationCap, LayoutDashboard, Library, ListChecks, Network, NotebookPen, ScrollText, Settings, ShieldCheck, Swords, Users } from "lucide-react";
+import { BarChart3, BookMarked, ClipboardCheck, Bot, Building, Building2, Calendar, Clock, FileSearch, FlaskConical, Gavel, GraduationCap, LayoutDashboard, Library, ListChecks, Network, NotebookPen, ScrollText, Settings, ShieldCheck, Swords, Users } from "lucide-react";
 import { Wordmark } from "@/components/ui/brand";
 import { NavLink } from "./nav-link";
 import { signOutAction } from "@/app/actions/auth";
@@ -22,6 +22,9 @@ const groups = [
     { href: "/lab", label: "Capital Architecture Lab", icon: FlaskConical },
     { href: "/simulator", label: "Empire Simulator", icon: Swords },
     { href: "/committee", label: "Investment Committee", icon: Gavel },
+  ] },
+  { title: "Fieldbook", items: [
+    { href: "/fieldbook", label: "The Investor’s Fieldbook", icon: ClipboardCheck },
   ] },
   { title: "Study", items: [
     { href: "/synthesis", label: "Strategy Synthesis", icon: NotebookPen },

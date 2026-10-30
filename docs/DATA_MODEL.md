@@ -59,6 +59,21 @@ transaction's stated location). The schematic map draws only nodes with coordina
 `collection_items`, `ritual_entries` (one per user and ritual day per week), `program_progress` (manual task
 completions), `quiz_attempts` (answers and score). All carry `user_id` and RLS owner policies.
 
+## Fieldbook tables (migration 0007)
+`source_passages` (user_id NULL = platform record; user rows private; excerpt capped at 1,500 characters), `quote_analyses`,
+`analysis_statements` (dimension 1–10 and one of five evidence classes), `practice_exercises` (seeded, keyed by slug),
+`properties` (user_id NULL = fictional platform property), `inspection_sessions` (draft/completed, optional location),
+`inspection_items` (one rating per checklist item per session), `findings` (severity, confidence, cost range which requires a
+cost source, follow-up status, resolution), `finding_revisions` (previous values appended on every edit), `inspection_media`
+(images held as base64 text, 3 MB cap, served only through an authorised route), `follow_up_actions`, `challenge_attempts`
+(answers and result as JSON, score), `fieldbook_reports` (frozen snapshot and Markdown, linked to a Research Library note).
+Platform rows are readable by everyone; everything else carries `user_id` and an RLS owner policy.
+
+Not yet modelled (listed in the directive, deferred to later phases): operating statements and line items, rent rolls, unit
+records, stored financial reconciliations, capital expenditure estimates as their own entity, broker and lender interviews,
+financing term sheets, student skill scores and committee decisions for Fieldbook deals. Statements for the fictional case live in
+code (`src/fieldbook/challenges/`), like quizzes and simulation scenarios.
+
 ## Still planned
 `market_data_series` (with source and as_of), once an authorised data source exists.
 

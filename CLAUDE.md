@@ -38,7 +38,7 @@ engine and decision simulations. Build the real product, not the appearance of o
 ```
 src/app/(public)      public site: home, explore, investigations, how-it-works, deal-archaeology, capital-lab,
                       simulations, methodology, membership, sign-in, sign-up
-src/app/(app)         authenticated app: command-center, dossiers, timeline, deals, evidence, network, institutions,
+src/app/(app)         authenticated app: fieldbook/*, command-center, dossiers, timeline, deals, evidence, network, institutions,
                       lab, simulator, committee, library, profile, roadmap, admin/*
 src/app/actions       server actions (auth, workspace, admin)
 src/components/ui     primitives + brand mark
@@ -54,6 +54,7 @@ src/simulation        engine, scenarios/, committee evaluator
 src/quiz              quiz types, grading, bank (numeric answers computed by the finance library)
 src/program           24-week curriculum and task checks
 src/ai                BM25 retrieval and the grounded historian
+src/fieldbook         Investor's Fieldbook: statement math, challenge cases, grader, reconciliation, report, inspection templates, featured passage
 src/lib/auth          password (scrypt), tokens (HMAC cookie), roles/capabilities, service, current-user
 src/lib/data          research / workspace / admin / models / cases / network / simulations data access
 src/lib/validation    zod schemas
@@ -164,3 +165,12 @@ Phase 5 conventions: competency and program progress come from stored work, neve
 answers only from retrieved evidence, strips citations it was not given, and makes no model call when retrieval is
 empty. Entitlements never gate owners or administrators and are enforced only when `ATLAS_ENFORCE_ENTITLEMENTS` is set.
 Doctrine exports escape all user text.
+
+Fieldbook conventions (Expansion 002): everything under `src/fieldbook` is pure and unit-tested with independently computed
+(Python) expected values; challenge cases are TypeScript modules in `src/fieldbook/challenges/` registered in its `index.ts`, and the
+grader and pages are case-agnostic. Fictional properties, statements and walk evidence are labelled fictional everywhere and carry
+no photographs. Cross-checks between a statement and a site raise questions and never assert wrongdoing or change assumptions.
+Passages are first-person and uncorroborated unless a verified supporting fact is added; the platform stores no copyrighted passage
+text, and users' excerpts are private. Photos are identified by magic bytes, capped at 3 MB, require a consent tick, and are served
+only to their owner. Forms that can fail validation use `useManualAction` (no automatic form reset) and redirect on success.
+Never claim offline support beyond what `tests/e2e/fieldbook.spec.ts` proves: drafts survive a lost connection while the page is open.

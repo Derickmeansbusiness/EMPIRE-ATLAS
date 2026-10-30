@@ -66,6 +66,25 @@ Deferred, on purpose:
 - Institution-to-institution comparison, which needs more than one published dossier.
 - Supabase Auth/Storage adapters.
 
+## Expansion 002: The Investor’s Fieldbook — first workflow live, build continuing
+Investor Mind Lab, Property Intelligence Lab and Financial Statement Intelligence, added without changing existing modules.
+Migration 0007. See `docs/reports/FIELDBOOK-001-REPORT.md` for the audit, scope, tests and gaps.
+
+Live: sourced passage analysis (Cardone, p. 39) across ten dimensions with five evidence classes; the Practice Translator
+(six exercises with launch links); private passages with short excerpts; the Linden Court underwriting challenge (case 1)
+with a model solution, six-dimension grading and attempt history; seven inspection templates covering all 17 categories;
+the mobile-first property walk with draft saving, findings (severity, confidence, cost with source), private photos,
+optional location tag, follow-ups and revision history; statement-to-site reconciliation with base/downside/upside cases;
+saved, exportable Property Intelligence Reports mirrored into the Research Library; hand-off to the Capital Lab underwriter.
+
+Build order from the directive, and where each stands:
+- **Phase A, Investor Mind Lab:** featured passage, analysis display and exercises done. Pending: editor for your own ten-dimension analyses, AI-assisted analysis (labelled as interpretation), linking passages to dossiers and principles.
+- **Phase B, Statement Challenge:** engine, grader and case 1 done. Pending: cases 2–20.
+- **Phase C, Field Inspection:** done for the fictional property. Pending: creating your own properties, voice notes, photo annotation, customisable templates, service-worker offline loading.
+- **Phase D, Reconciliation:** done for the fictional case, computed live from its statement. Pending: CSV/XLSX ingestion, rent rolls and unit records as stored entities, persisted reconciliations, PDF extraction with confidence display, Investment Committee hand-off.
+- **Phase E, Interviews and simulation:** not started (broker worksheet, lender interview, term-sheet comparison, negotiation role-play, virtual property walk).
+- **Also pending:** the eight-stage Investor Operating System workflow and the skill scorecard.
+
 ## Research roadmap (after Zell)
 1. Stephen Ross 2. Donald Bren 3. Ray Kroc & Harry Sonneborn 4. Arnold Schwarzenegger 5. John Jacob Astor
 6. Barry Sternlicht 7. Howard Marks 8. Jon Gray, then the remaining initial profiles and institutions. No filler:
